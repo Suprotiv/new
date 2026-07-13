@@ -8,8 +8,12 @@ const axios = require("axios");
 const nodemailer = require("nodemailer");
 const dataStore = require('./dataStore');
 const {
+  LEGACY_IMAGES_ROOT,
+  UPLOAD_ROOT,
+  localPathFromPublicPath,
   removeStorageImage,
   removeStorageImages,
+  removeUploadFolder,
   uploadImageFile,
 } = require('./storage');
 const app = express();
@@ -22,7 +26,8 @@ const TEAM_IMAGE_SIZE_LIMIT = 2 * 1024 * 1024;
 
 app.use(cors());
 app.use(express.json());
-app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/uploads', express.static(UPLOAD_ROOT));
+app.use('/images', express.static(LEGACY_IMAGES_ROOT));
 
 
 const JWT_SECRET = process.env.JWT_SECRET || "new_keyssqww";
@@ -102,8 +107,8 @@ function getProjectIdError(value) {
 }
 
 function removeBackendImage(imagePath) {
-  if (!imagePath || !imagePath.startsWith('/images/')) return;
-  const fullPath = path.join(__dirname, imagePath);
+  const fullPath = localPathFromPublicPath(imagePath);
+  if (!fullPath) return;
   if (fs.existsSync(fullPath)) {
     fs.unlinkSync(fullPath);
   }
@@ -139,17 +144,15 @@ async function removeProjectFiles(project) {
   await removeImages(getProjectImagePaths(project));
 
   if (project?.project_id) {
-    const folderPath = path.join(__dirname, 'images/projects', project.project_id);
-    if (fs.existsSync(folderPath)) {
-      fs.rmSync(folderPath, { recursive: true, force: true });
-    }
+    removeUploadFolder('projects', project.project_id);
   }
 }
 
 function isUploadedSiteContentImage(imagePath) {
   return Boolean(
     imagePath &&
-      (imagePath.startsWith('/images/site-content/uploads/') ||
+      (imagePath.startsWith('/uploads/site-content/uploads/') ||
+        imagePath.startsWith('/images/site-content/uploads/') ||
         imagePath.includes('/storage/v1/object/public/'))
   );
 }
@@ -212,18 +215,18 @@ const defaultSiteContent = {
     "home.prefooter.copy": "Creativity isn’t clean. It’s messy,\nunpredictable and beautifully chaotic.\nThat’s where the magic happens— and\nwhere the best stories are born.",
   },
   images: {
-    "home.hero.image": "/images/site-content/default/Home-Wysiwyg.png",
-    "home.news.heroImage": "/images/site-content/default/img-News-Siddha-Serena.jpeg",
-    "home.news.bottomImage": "/images/site-content/default/img-News-Siddha-Serena-bottom.jpeg",
-    "home.featured.image": "/images/site-content/default/img-Featured-Ambuja-Neotia.jpg",
-    "home.work.panel1.image": "/images/site-content/default/work-SnoBite.jpg",
-    "home.work.panel2.image": "/images/site-content/default/work-ITC-Hotel.jpg",
-    "home.work.panel3.image": "/images/site-content/default/work-VION.jpg",
-    "home.accolades.1.image": "/images/site-content/default/accolades-AMBUJA-UTALIKA.png",
-    "home.accolades.2.image": "/images/site-content/default/accolades-VENTURES-FASHION.png",
-    "home.accolades.3.image": "/images/site-content/default/accolades-ROTARY-CLUB-OF-CALCUTTA.png",
-    "home.accolades.4.image": "/images/site-content/default/accolades-KYOORIUS.png",
-    "home.prefooter.image": "/images/site-content/default/pre-footer.png",
+    "home.hero.image": "/uploads/site-content/default/Home-Wysiwyg.png",
+    "home.news.heroImage": "/uploads/site-content/default/img-News-Siddha-Serena.jpeg",
+    "home.news.bottomImage": "/uploads/site-content/default/img-News-Siddha-Serena-bottom.jpeg",
+    "home.featured.image": "/uploads/site-content/default/img-Featured-Ambuja-Neotia.jpg",
+    "home.work.panel1.image": "/uploads/site-content/default/work-SnoBite.jpg",
+    "home.work.panel2.image": "/uploads/site-content/default/work-ITC-Hotel.jpg",
+    "home.work.panel3.image": "/uploads/site-content/default/work-VION.jpg",
+    "home.accolades.1.image": "/uploads/site-content/default/accolades-AMBUJA-UTALIKA.png",
+    "home.accolades.2.image": "/uploads/site-content/default/accolades-VENTURES-FASHION.png",
+    "home.accolades.3.image": "/uploads/site-content/default/accolades-ROTARY-CLUB-OF-CALCUTTA.png",
+    "home.accolades.4.image": "/uploads/site-content/default/accolades-KYOORIUS.png",
+    "home.prefooter.image": "/uploads/site-content/default/pre-footer.png",
   },
 };
 

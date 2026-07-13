@@ -1,7 +1,13 @@
+const fs = require('fs');
 const path = require('path');
-const { getSupabase } = require('./db');
 
-const STORAGE_BUCKET = process.env.SUPABASE_STORAGE_BUCKET || 'wysiwyg-media';
+const HOSTINGER_UPLOAD_ROOT = '/domains/api.wysiwyg.co.in/uploads';
+const DEFAULT_UPLOAD_ROOT = fs.existsSync(path.dirname(HOSTINGER_UPLOAD_ROOT))
+  ? HOSTINGER_UPLOAD_ROOT
+  : path.join(__dirname, 'uploads');
+
+const UPLOAD_ROOT = process.env.UPLOAD_ROOT || DEFAULT_UPLOAD_ROOT;
+const LEGACY_IMAGES_ROOT = path.join(__dirname, 'images');
 
 function safeFileName(name = 'image') {
   const ext = path.extname(name);
@@ -11,79 +17,73 @@ function safeFileName(name = 'image') {
   return `${safeBase || 'image'}${safeExt}`;
 }
 
-async function ensureStorageBucket() {
-  const supabase = getSupabase();
-  const { data, error } = await supabase.storage.getBucket(STORAGE_BUCKET);
+function toPublicUploadPath(...parts) {
+  return `/uploads/${parts.filter(Boolean).join('/')}`.replace(/\/+/g, '/');
+}
 
-  if (!error && data) return;
-
-  const { error: createError } = await supabase.storage.createBucket(STORAGE_BUCKET, {
-    public: true,
-    fileSizeLimit: 25 * 1024 * 1024,
-    allowedMimeTypes: ['image/*'],
-  });
-
-  if (createError && createError.message !== 'Bucket already exists') {
-    throw createError;
+function resolveInside(root, relativePath) {
+  const resolvedRoot = path.resolve(root);
+  const resolvedPath = path.resolve(resolvedRoot, relativePath);
+  if (resolvedPath !== resolvedRoot && !resolvedPath.startsWith(`${resolvedRoot}${path.sep}`)) {
+    return '';
   }
+  return resolvedPath;
+}
+
+function localPathFromPublicPath(value) {
+  if (!value) return '';
+
+  if (value.startsWith('/uploads/')) {
+    return resolveInside(UPLOAD_ROOT, value.replace(/^\/uploads\/?/, ''));
+  }
+
+  if (value.startsWith('/images/')) {
+    return resolveInside(LEGACY_IMAGES_ROOT, value.replace(/^\/images\/?/, ''));
+  }
+
+  return '';
 }
 
 async function uploadImageFile(file, folder) {
   if (!file) return '';
 
-  await ensureStorageBucket();
+  const targetFolder = path.join(UPLOAD_ROOT, folder);
+  fs.mkdirSync(targetFolder, { recursive: true });
 
-  const supabase = getSupabase();
-  const objectPath = `${folder}/${Date.now()}-${Math.round(Math.random() * 1e9)}-${safeFileName(file.originalname)}`;
-  const { error } = await supabase.storage
-    .from(STORAGE_BUCKET)
-    .upload(objectPath, file.buffer, {
-      contentType: file.mimetype,
-      upsert: false,
-    });
+  const filename = `${Date.now()}-${Math.round(Math.random() * 1e9)}-${safeFileName(file.originalname)}`;
+  const targetPath = path.join(targetFolder, filename);
+  await fs.promises.writeFile(targetPath, file.buffer);
 
-  if (error) throw error;
-
-  const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(objectPath);
-  return data.publicUrl;
-}
-
-function storagePathFromUrl(value) {
-  if (!value) return '';
-
-  const marker = `/storage/v1/object/public/${STORAGE_BUCKET}/`;
-  const markerIndex = value.indexOf(marker);
-  if (markerIndex === -1) return '';
-
-  return decodeURIComponent(value.slice(markerIndex + marker.length));
+  return toPublicUploadPath(folder, filename);
 }
 
 async function removeStorageImage(value) {
-  const objectPath = storagePathFromUrl(value);
-  if (!objectPath) return;
+  const filePath = localPathFromPublicPath(value);
+  if (!filePath || !fs.existsSync(filePath)) return;
 
-  const { error } = await getSupabase().storage.from(STORAGE_BUCKET).remove([objectPath]);
-  if (error) {
-    console.warn(`Failed to remove Supabase Storage object ${objectPath}:`, error.message);
-  }
+  await fs.promises.unlink(filePath);
 }
 
 async function removeStorageImages(values = []) {
-  const objectPaths = [...new Set(values.map(storagePathFromUrl).filter(Boolean))];
-  if (!objectPaths.length) return;
+  for (const value of [...new Set(values.filter(Boolean))]) {
+    await removeStorageImage(value);
+  }
+}
 
-  const { error } = await getSupabase().storage.from(STORAGE_BUCKET).remove(objectPaths);
-  if (error) {
-    console.warn('Failed to remove Supabase Storage objects:', error.message);
+function removeUploadFolder(...parts) {
+  const folderPath = path.join(UPLOAD_ROOT, ...parts);
+  if (fs.existsSync(folderPath)) {
+    fs.rmSync(folderPath, { recursive: true, force: true });
   }
 }
 
 module.exports = {
-  STORAGE_BUCKET,
-  ensureStorageBucket,
-  safeFileName,
-  uploadImageFile,
+  UPLOAD_ROOT,
+  LEGACY_IMAGES_ROOT,
+  localPathFromPublicPath,
   removeStorageImage,
   removeStorageImages,
-  storagePathFromUrl,
+  removeUploadFolder,
+  safeFileName,
+  uploadImageFile,
 };

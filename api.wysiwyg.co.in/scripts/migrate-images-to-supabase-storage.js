@@ -151,7 +151,7 @@ async function main() {
   await migrateTeam(imageMap);
   await migrateClients(imageMap);
   await migrateSiteContent(imageMap);
-  console.log(`Migrated ${imageMap.size} local image files to Supabase Storage.`);
+  console.log(`Migrated ${imageMap.size} local image files to upload storage.`);
 }
 
 main().catch((error) => {
