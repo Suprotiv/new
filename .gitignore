@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.*
+
+# Build output
+.next/
+out/
+dist/
+build/
+coverage/
+
+# API media assets
+api.wysiwyg.co.in/images/
+
+# Environment and local config
+.env
+.env.*
+!.env.example
+
+# Logs and diagnostics
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# OS/editor noise
+.DS_Store
+
+# TypeScript
+*.tsbuildinfo
+
+# Deployment/local tooling
+.vercel/

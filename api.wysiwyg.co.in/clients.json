@@ -1,0 +1,476 @@
+{
+  "clients": [
+    {
+      "id": "client-ambujaneotia",
+      "name": "Ambuja Neotia",
+      "link": "",
+      "bwImage": "/images/clients/client-AmbujaNeotia-W.png",
+      "colorImage": "/images/clients/client-AmbujaNeotia.png",
+      "order": 0
+    },
+    {
+      "id": "client-alcove",
+      "name": "Alcove",
+      "link": "",
+      "bwImage": "/images/clients/client-Alcove-W.png",
+      "colorImage": "/images/clients/client-Alcove.png",
+      "order": 1
+    },
+    {
+      "id": "client-anjika",
+      "name": "Anjika",
+      "link": "",
+      "bwImage": "/images/clients/client-Anjika-W.png",
+      "colorImage": "/images/clients/client-Anjika.png",
+      "order": 2
+    },
+    {
+      "id": "client-avamajewellers",
+      "name": "Avama Jewellers",
+      "link": "",
+      "bwImage": "/images/clients/client-AvamaJewellers-W.png",
+      "colorImage": "/images/clients/client-AvamaJewellers.png",
+      "order": 3
+    },
+    {
+      "id": "client-baac",
+      "name": "Birla Academy of Art & Culture",
+      "link": "",
+      "bwImage": "/images/clients/client-BAAC-W.png",
+      "colorImage": "/images/clients/client-BAAC.png",
+      "order": 4
+    },
+    {
+      "id": "client-belani",
+      "name": "Belani",
+      "link": "",
+      "bwImage": "/images/clients/client-Belani-W.png",
+      "colorImage": "/images/clients/client-Belani.png",
+      "order": 5
+    },
+    {
+      "id": "client-bigo",
+      "name": "Bigo",
+      "link": "",
+      "bwImage": "/images/clients/client-Bigo-W.png",
+      "colorImage": "/images/clients/client-Bigo.png",
+      "order": 6
+    },
+    {
+      "id": "client-birlaelevators",
+      "name": "Birla Elevators",
+      "link": "",
+      "bwImage": "/images/clients/client-BirlaElevators-W.png",
+      "colorImage": "/images/clients/client-BirlaElevators.png",
+      "order": 7
+    },
+    {
+      "id": "client-blackburn",
+      "name": "Black Burn",
+      "link": "",
+      "bwImage": "/images/clients/client-BlackBurn-W.png",
+      "colorImage": "/images/clients/client-BlackBurn.png",
+      "order": 8
+    },
+    {
+      "id": "client-celicaresidency",
+      "name": "Celica Residency",
+      "link": "/celica-residency",
+      "bwImage": "/images/clients/client-CelicaResidency-W.png",
+      "colorImage": "/images/clients/client-CelicaResidency.png",
+      "order": 9
+    },
+    {
+      "id": "client-centuryveneers",
+      "name": "Century Veneers",
+      "link": "",
+      "bwImage": "/images/clients/client-CenturyVeneers-W.png",
+      "colorImage": "/images/clients/client-CenturyVeneers.png",
+      "order": 10
+    },
+    {
+      "id": "client-dentasia",
+      "name": "Dentasia",
+      "link": "",
+      "bwImage": "/images/clients/client-Dentasia-W.png",
+      "colorImage": "/images/clients/client-Dentasia.png",
+      "order": 11
+    },
+    {
+      "id": "client-dinshaws",
+      "name": "Dinshaw's",
+      "link": "/dinshaws",
+      "bwImage": "/images/clients/client-Dinshaws-W.png",
+      "colorImage": "/images/clients/client-Dinshaws.png",
+      "order": 12
+    },
+    {
+      "id": "client-edn",
+      "name": "Earth Day Network",
+      "link": "/earth-day-network",
+      "bwImage": "/images/clients/client-EDN-W.png",
+      "colorImage": "/images/clients/client-EDN.png",
+      "order": 13
+    },
+    {
+      "id": "client-electrosteel",
+      "name": "Electrosteel",
+      "link": "",
+      "bwImage": "/images/clients/client-Electrosteel-W.png",
+      "colorImage": "/images/clients/client-Electrosteel.png",
+      "order": 14
+    },
+    {
+      "id": "client-embee",
+      "name": "Embee",
+      "link": "",
+      "bwImage": "/images/clients/client-Embee-W.png",
+      "colorImage": "/images/clients/client-Embee.png",
+      "order": 15
+    },
+    {
+      "id": "client-exide",
+      "name": "Exide",
+      "link": "",
+      "bwImage": "/images/clients/client-Exide-W.png",
+      "colorImage": "/images/clients/client-Exide.png",
+      "order": 16
+    },
+    {
+      "id": "client-foodstation",
+      "name": "Food Station",
+      "link": "",
+      "bwImage": "/images/clients/client-FoodStation-W.png",
+      "colorImage": "/images/clients/client-FoodStation.png",
+      "order": 17
+    },
+    {
+      "id": "client-frankross",
+      "name": "Frank Ross",
+      "link": "",
+      "bwImage": "/images/clients/client-FrankRoss-W.png",
+      "colorImage": "/images/clients/client-FrankRoss.png",
+      "order": 18
+    },
+    {
+      "id": "client-gallerysanskriti",
+      "name": "Gallery Sanskriti",
+      "link": "",
+      "bwImage": "/images/clients/client-GallerySanskriti-W.png",
+      "colorImage": "/images/clients/client-GallerySanskriti.png",
+      "order": 19
+    },
+    {
+      "id": "client-greaves",
+      "name": "Greaves",
+      "link": "",
+      "bwImage": "/images/clients/client-Greaves-W.png",
+      "colorImage": "/images/clients/client-Greaves.png",
+      "order": 20
+    },
+    {
+      "id": "client-iabahousing",
+      "name": "IABA Housing",
+      "link": "",
+      "bwImage": "/images/clients/client-IABAHousing-W.png",
+      "colorImage": "/images/clients/client-IABAHousing.png",
+      "order": 21
+    },
+    {
+      "id": "client-idlygo",
+      "name": "Idly Go",
+      "link": "/idlygo",
+      "bwImage": "/images/clients/client-IdlyGo-W.png",
+      "colorImage": "/images/clients/client-IdlyGo.png",
+      "order": 22
+    },
+    {
+      "id": "client-ifb-agro",
+      "name": "IFB Agro",
+      "link": "",
+      "bwImage": "/images/clients/client-IFB-Agro-W.png",
+      "colorImage": "/images/clients/client-IFB-Agro.png",
+      "order": 23
+    },
+    {
+      "id": "client-ifb-appliances",
+      "name": "IFB Appliances",
+      "link": "",
+      "bwImage": "/images/clients/client-IFB-Appliances-W.png",
+      "colorImage": "/images/clients/client-IFB-Appliances.png",
+      "order": 24
+    },
+    {
+      "id": "client-itc-hotels",
+      "name": "ITC Hotels",
+      "link": "/itchotels",
+      "bwImage": "/images/clients/client-ITC-Hotels-W.png",
+      "colorImage": "/images/clients/client-ITC-Hotels.png",
+      "order": 25
+    },
+    {
+      "id": "client-itc",
+      "name": "ITC",
+      "link": "",
+      "bwImage": "/images/clients/client-ITC-W.png",
+      "colorImage": "/images/clients/client-ITC.png",
+      "order": 26
+    },
+    {
+      "id": "client-jd-jones",
+      "name": "JD Jones",
+      "link": "",
+      "bwImage": "/images/clients/client-JD-Jones-W.png",
+      "colorImage": "/images/clients/client-JD-Jones.png",
+      "order": 27
+    },
+    {
+      "id": "client-jindal",
+      "name": "Jindal",
+      "link": "",
+      "bwImage": "/images/clients/client-Jindal-W.png",
+      "colorImage": "/images/clients/client-Jindal.png",
+      "order": 28
+    },
+    {
+      "id": "client-jvl",
+      "name": "JVL",
+      "link": "",
+      "bwImage": "/images/clients/client-JVL-W.png",
+      "colorImage": "/images/clients/client-JVL.png",
+      "order": 29
+    },
+    {
+      "id": "client-kothari",
+      "name": "Kothari",
+      "link": "",
+      "bwImage": "/images/clients/client-Kothari-W.png",
+      "colorImage": "/images/clients/client-Kothari.png",
+      "order": 30
+    },
+    {
+      "id": "client-limtex",
+      "name": "Limtex",
+      "link": "",
+      "bwImage": "/images/clients/client-Limtex-W.png",
+      "colorImage": "/images/clients/client-Limtex.png",
+      "order": 31
+    },
+    {
+      "id": "client-magikcook",
+      "name": "Magik Cook",
+      "link": "",
+      "bwImage": "/images/clients/client-MagikCook-W.png",
+      "colorImage": "/images/clients/client-MagikCook.png",
+      "order": 32
+    },
+    {
+      "id": "client-manicasadona",
+      "name": "Mani Casadona",
+      "link": "",
+      "bwImage": "/images/clients/client-ManiCasadona-W.png",
+      "colorImage": "/images/clients/client-ManiCasadona.png",
+      "order": 33
+    },
+    {
+      "id": "client-mansasugar",
+      "name": "Mansa Sugar",
+      "link": "",
+      "bwImage": "/images/clients/client-MansaSugar-W.png",
+      "colorImage": "/images/clients/client-MansaSugar.png",
+      "order": 34
+    },
+    {
+      "id": "client-mbwa",
+      "name": "Mahadevi Birla World Academy",
+      "link": "",
+      "bwImage": "/images/clients/client-MBWA-W.png",
+      "colorImage": "/images/clients/client-MBWA.png",
+      "order": 35
+    },
+    {
+      "id": "client-multimoney-forex",
+      "name": "Multimoney Forex",
+      "link": "",
+      "bwImage": "/images/clients/client-Multimoney-Forex-W.png",
+      "colorImage": "/images/clients/client-Multimoney-Forex.png",
+      "order": 36
+    },
+    {
+      "id": "client-mvk",
+      "name": "Manovikas Kendra",
+      "link": "/manovikas-kendra",
+      "bwImage": "/images/clients/client-MVK-W.png",
+      "colorImage": "/images/clients/client-MVK.png",
+      "order": 37
+    },
+    {
+      "id": "client-palki",
+      "name": "Palki",
+      "link": "",
+      "bwImage": "/images/clients/client-Palki-W.png",
+      "colorImage": "/images/clients/client-Palki.png",
+      "order": 38
+    },
+    {
+      "id": "client-poddar-hmp-group",
+      "name": "Poddar HMP Group",
+      "link": "",
+      "bwImage": "/images/clients/client-Poddar-HMP-Group-W.png",
+      "colorImage": "/images/clients/client-Poddar-HMP-Group.png",
+      "order": 39
+    },
+    {
+      "id": "client-presidency-university-kolkata",
+      "name": "Presidency University Kolkata",
+      "link": "",
+      "bwImage": "/images/clients/client-Presidency-University-Kolkata-W.png",
+      "colorImage": "/images/clients/client-Presidency-University-Kolkata.png",
+      "order": 40
+    },
+    {
+      "id": "client-scarletsplendour",
+      "name": "Scarlet Splendour",
+      "link": "",
+      "bwImage": "/images/clients/client-ScarletSplendour-W.png",
+      "colorImage": "/images/clients/client-ScarletSplendour.png",
+      "order": 41
+    },
+    {
+      "id": "client-southcity-international-school",
+      "name": "South City International School",
+      "link": "",
+      "bwImage": "/images/clients/client-Southcity-International-School-W.png",
+      "colorImage": "/images/clients/client-Southcity-International-School.png",
+      "order": 42
+    },
+    {
+      "id": "client-she",
+      "name": "SHE",
+      "link": "",
+      "bwImage": "/images/clients/client-SHE-W.png",
+      "colorImage": "",
+      "order": 43
+    },
+    {
+      "id": "client-shivom-realty",
+      "name": "Shivom Reality",
+      "link": "",
+      "bwImage": "/images/clients/client-Shivom-Realty-W.png",
+      "colorImage": "/images/clients/client-Shivom-Realty.png",
+      "order": 44
+    },
+    {
+      "id": "client-siddha",
+      "name": "Siddha",
+      "link": "",
+      "bwImage": "/images/clients/client-Siddha-W.png",
+      "colorImage": "/images/clients/client-Siddha.png",
+      "order": 45
+    },
+    {
+      "id": "client-snobite",
+      "name": "SnoBitee",
+      "link": "",
+      "bwImage": "/images/clients/client-SnoBite-W.png",
+      "colorImage": "/images/clients/client-SnoBite.png",
+      "order": 46
+    },
+    {
+      "id": "client-sofmax",
+      "name": "Sofmax",
+      "link": "",
+      "bwImage": "/images/clients/client-Sofmax-W.png",
+      "colorImage": "/images/clients/client-Sofmax.png",
+      "order": 47
+    },
+    {
+      "id": "client-suwaliftea",
+      "name": "Suwalif Tea",
+      "link": "",
+      "bwImage": "/images/clients/client-SuwalifTea-W.png",
+      "colorImage": "/images/clients/client-SuwalifTea.png",
+      "order": 48
+    },
+    {
+      "id": "client-swarnim-international-school",
+      "name": "client Swarnim International School",
+      "link": "",
+      "bwImage": "/images/clients/client-Swarnim-International-School-W.png",
+      "colorImage": "/images/clients/client-Swarnim-International-School.png",
+      "order": 49
+    },
+    {
+      "id": "client-swayam",
+      "name": "Swayam",
+      "link": "",
+      "bwImage": "/images/clients/client-Swayam-W.png",
+      "colorImage": "/images/clients/client-Swayam.png",
+      "order": 50
+    },
+    {
+      "id": "client-tatasteel",
+      "name": "Tata Steel",
+      "link": "",
+      "bwImage": "/images/clients/client-TataSteel-W.png",
+      "colorImage": "/images/clients/client-TataSteel.png",
+      "order": 51
+    },
+    {
+      "id": "client-teloijan",
+      "name": "Teloijan",
+      "link": "",
+      "bwImage": "/images/clients/client-Teloijan-W.png",
+      "colorImage": "/images/clients/client-Teloijan.png",
+      "order": 52
+    },
+    {
+      "id": "client-thenewtown-school",
+      "name": "The New Town School",
+      "link": "",
+      "bwImage": "/images/clients/client-TheNewTown-School-W.png",
+      "colorImage": "/images/clients/client-TheNewTown-School.png",
+      "order": 53
+    },
+    {
+      "id": "client-theorganicmandi",
+      "name": "The Organic Mandi",
+      "link": "",
+      "bwImage": "/images/clients/client-TheOrganicMandi-W.png",
+      "colorImage": "/images/clients/client-TheOrganicMandi.png",
+      "order": 54
+    },
+    {
+      "id": "client-thevedary",
+      "name": "The Vedary",
+      "link": "",
+      "bwImage": "/images/clients/client-TheVedary-W.png",
+      "colorImage": "/images/clients/client-TheVedary.png",
+      "order": 55
+    },
+    {
+      "id": "client-tycab",
+      "name": "Tycab",
+      "link": "",
+      "bwImage": "/images/clients/client-Tycab-W.png",
+      "colorImage": "/images/clients/client-Tycab.png",
+      "order": 56
+    },
+    {
+      "id": "client-visasteel",
+      "name": "Visa Steel",
+      "link": "",
+      "bwImage": "/images/clients/client-VisaSteel-W.png",
+      "colorImage": "/images/clients/client-VisaSteel.png",
+      "order": 57
+    },
+    {
+      "id": "client-zois",
+      "name": "Zois",
+      "link": "",
+      "bwImage": "/images/clients/client-Zois-W.png",
+      "colorImage": "/images/clients/client-Zois.png",
+      "order": 58
+    }
+  ]
+}

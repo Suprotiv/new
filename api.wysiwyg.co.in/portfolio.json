@@ -1,0 +1,1215 @@
+{
+  "categories": [
+    {
+      "name": "All",
+      "slug": "all",
+      "tags": [
+        "everything",
+        "all projects"
+      ]
+    },
+    {
+      "name": "Art & Culture",
+      "slug": "art-%26-culture",
+      "tags": [
+        "art",
+        "culture",
+        "heritage",
+        "events"
+      ]
+    },
+    {
+      "name": "B2B",
+      "slug": "b2b",
+      "tags": [
+        "business",
+        "corporate",
+        "industrial"
+      ]
+    },
+    {
+      "name": "Consumer Durables",
+      "slug": "consumer-durables",
+      "tags": [
+        "products",
+        "home appliances",
+        "durable goods"
+      ]
+    },
+    {
+      "name": "CSR",
+      "slug": "csr",
+      "tags": [
+        "social",
+        "responsibility",
+        "impact"
+      ]
+    },
+    {
+      "name": "Education",
+      "slug": "education",
+      "tags": [
+        "schools",
+        "learning",
+        "edtech"
+      ]
+    },
+    {
+      "name": "Finance",
+      "slug": "finance",
+      "tags": [
+        "banking",
+        "fintech",
+        "investment"
+      ]
+    },
+    {
+      "name": "FMCG",
+      "slug": "fmcg",
+      "tags": [
+        "fast moving",
+        "consumer goods",
+        "food"
+      ]
+    },
+    {
+      "name": "Lifestyle",
+      "slug": "lifestyle",
+      "tags": [
+        "fashion",
+        "living",
+        "trends"
+      ]
+    },
+    {
+      "name": "Lounges & Restaurants",
+      "slug": "lounges-&-restaurants",
+      "tags": [
+        "food",
+        "hospitality",
+        "dining"
+      ]
+    },
+    {
+      "name": "Luxury",
+      "slug": "luxury",
+      "tags": [
+        "premium",
+        "high-end",
+        "exclusive"
+      ]
+    },
+    {
+      "name": "Medical",
+      "slug": "medical",
+      "tags": [
+        "healthcare",
+        "hospitals",
+        "pharma"
+      ]
+    },
+    {
+      "name": "Occasions & Gifting",
+      "slug": "occasions-%26-gifting",
+      "tags": [
+        "gifts",
+        "celebration",
+        "festive"
+      ]
+    },
+    {
+      "name": "Publications",
+      "slug": "publications",
+      "tags": [
+        "books",
+        "print",
+        "editorial"
+      ]
+    },
+    {
+      "name": "Real Estate",
+      "slug": "real-estate",
+      "tags": [
+        "property",
+        "buildings",
+        "architecture"
+      ]
+    },
+    {
+      "name": "Retail",
+      "slug": "retail",
+      "tags": [
+        "stores",
+        "shopping",
+        "ecommerce"
+      ]
+    },
+    {
+      "name": "Web & App",
+      "slug": "web-&-app",
+      "tags": [
+        "digital",
+        "tech",
+        "UI",
+        "UX"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "project_id": "dinshaws",
+      "title": "Dinshaw's",
+      "summaryTitle": "Dinshaw's",
+      "projectDescription": "The brief was straightforward yet ambitious: Idextity evolution, but a packaging revolution. The challenge was to retain the authenticity and heritage of Dinshaw’s while making it relevant for the present and future.",
+      "question": "How does a 93-year-old brand step into the future?",
+      "answer": "By honouring its past, elevating its presence and building on a legacy that’s instantly recognised.   ",
+      "summary": "Tasked with an ‘identity evolution, packaging revolution’ for a dairy giant, we modernised this legacy brand for a new generation while preserving the deep emotional equity of its heritage.",
+      "meta": {
+        "services": "Packaging",
+        "client": " Dinshaw's Dairy Foods Pvt Ltd",
+        "sector": " FMCG"
+      },
+      "category": [
+        "fmcg"
+      ],
+      "tags": [
+        "food",
+        "fmcg",
+        "ice-cream",
+        "print",
+        "package",
+        "label"
+      ],
+      "mainImage": "/images/projects/dinshaws/1780550436734-142974331-Dinshaw-ChocoBar-Bar.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/dinshaws/Dinshaw-FamilyPack-Paan.jpg",
+          "/images/projects/dinshaws/Dinshaw-FamilyPack-CookiesNCream.jpg",
+          "/images/projects/dinshaws/Dinshaw-FamilyPack-Rajbhog.jpg",
+          "/images/projects/dinshaws/Dinshaw-FamilyPack-TenderCoconut.jpg",
+          "/images/projects/dinshaws/1750417279084-953706050-Dinshaw-FamilyPack-Strawberry.jpg",
+          "/images/projects/dinshaws/1750417279082-192551131-Dinshaw-FamilyPack-RoastedAlmond.jpg",
+          "/images/projects/dinshaws/1750417279080-943021469-Dinshaw-FamilyPack-Rajwadi.jpg",
+          "/images/projects/dinshaws/1750417279079-204854173-Dinshaw-FamilyPack-Pista.jpg",
+          "/images/projects/dinshaws/1750417279075-853065615-Dinshaw-FamilyPack-Mango.jpg",
+          "/images/projects/dinshaws/1750417279077-707293096-Dinshaw-FamilyPack-MangoLychee.jpg",
+          "/images/projects/dinshaws/1750417279073-917720253-Dinshaw-FamilyPack-Kulfi-3-in-1.jpg",
+          "/images/projects/dinshaws/1750417279070-227116615-Dinshaw-FamilyPack-KesarPista.jpg",
+          "/images/projects/dinshaws/1750417279067-646313884-Dinshaw-FamilyPack-FruitOverload.jpg",
+          "/images/projects/dinshaws/1750417279066-873892995-Dinshaw-FamilyPack-ChocoChips.jpg",
+          "/images/projects/dinshaws/1750417279064-668854174-Dinshaw-FamilyPack-ButterScotch.jpg",
+          "/images/projects/dinshaws/1750417279063-692496027-Dinshaw-FamilyPack-BlackCurrent.jpg",
+          "/images/projects/dinshaws/1750417279062-389692739-Dinshaw-FamilyPack-BadshahiFaluda.jpg",
+          "/images/projects/dinshaws/1750417279060-397821261-Dinshaw-FamilyPack-AnjeerBadam.jpg",
+          "/images/projects/dinshaws/1750417279057-652692279-Dinshaw-FamilyPack-AmericanNuts.jpg",
+          "/images/projects/dinshaws/Dinshaw-FamilyPack-3in1.jpg"
+        ],
+        "slider2": [
+          "/images/projects/dinshaws/Dinshaw-Diary-Milk.jpg",
+          "/images/projects/dinshaws/Dinshaw-Ghee-Paneer-Lassi-Shrikhand-Dahi.jpg",
+          "/images/projects/dinshaws/Dinshaw-IceCreamCake-Pastry.gif"
+        ],
+        "column1": [
+          "/images/projects/dinshaws/Dinshaw-Bars-PremiumBars.gif",
+          "/images/projects/dinshaws/Dinshaw-Lollies.jpg",
+          "/images/projects/dinshaws/Dinshaw-Kulfi-Feb-2025.jpg",
+          "/images/projects/dinshaws/Dinshaw-Cones.gif",
+          "/images/projects/dinshaws/Dinshaw-Maha-Sundae-May-2025.jpg",
+          "/images/projects/dinshaws/Dinshaw-Premium-Cups-100-ml.gif",
+          "/images/projects/dinshaws/Dinshaw-Premium-Tubs.gif",
+          "/images/projects/dinshaws/Dinshaw-Sundae-Cups-May-2025.jpg"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "ambuja",
+      "title": "Ambuja Neotia",
+      "summaryTitle": "Ambuja Neotia",
+      "projectDescription": "The launch of Utalika Panchami, seen through its various collaterals",
+      "question": "?",
+      "answer": "?",
+      "summary": "We translated world-class architectural heritage and luxury into experiential brochures as well as aspirational social media content.",
+      "meta": {
+        "services": "Brochures | Hoardings | Leaflets | Print Ads | Social Media",
+        "client": "Ambuja Neotia",
+        "sector": "Real Estate"
+      },
+      "category": [
+        "real-estate"
+      ],
+      "tags": [
+        "Ad Newspaper",
+        "Hoarding",
+        "Leaflet",
+        "Brochure",
+        "Social Media",
+        "Printing",
+        ""
+      ],
+      "mainImage": "/images/projects/ambuja/1779965926551-943183216-Ambuja-Park-Unizen-Brochure-March-2026.gif",
+      "images": {
+        "slider1": [
+          "/images/projects/ambuja/1750676334412-784896127-Ambuja-Nova-Brochure-02-April-2025.jpg",
+          "/images/projects/ambuja/1750676334416-261738940-Ambuja-Nova-Brochure-04-April-2025.jpg",
+          "/images/projects/ambuja/1750676334418-511774902-Ambuja-Nova-Brochure-05-April-2025.jpg",
+          "/images/projects/ambuja/1750676334426-710108693-Ambuja-Nova-Brochure-06-April-2025.jpg",
+          "/images/projects/ambuja/Ambuja-Nova-Brochure-03-April-2025.jpg"
+        ],
+        "slider2": [
+          "/images/projects/ambuja/1750676334434-248992567-Ambuja-Utpalaa-Brochure-02-April-2025.jpg",
+          "/images/projects/ambuja/1750676334436-748978521-Ambuja-Utpalaa-Brochure-03-April-2025.jpg",
+          "/images/projects/ambuja/1750676334441-590427290-Ambuja-Utpalaa-Brochure-04-April-2025.jpg",
+          "/images/projects/ambuja/1750676334446-515369257-Ambuja-Utpalaa-Brochure-05-April-2025.jpg",
+          "/images/projects/ambuja/1750676334455-271254697-Ambuja-Utpalaa-Brochure-06-April-2025.jpg",
+          "/images/projects/ambuja/1750676334460-661979370-Ambuja-Utpalaa-Brochure-07-April-2025.jpg"
+        ],
+        "column1": [
+          "/images/projects/ambuja/Ambuja-Park-Unizen-SM.gif",
+          "/images/projects/ambuja/Ambuja-The-Park-Unizen-Billboard-March-2026.gif",
+          "/images/projects/ambuja/Ambuja-Udyatt-Brochure-Jan-2026.gif",
+          "/images/projects/ambuja/Ambuja-Utalika-Panchami-2024.gif",
+          "/images/projects/ambuja/Ambuja-ROG-Book-Sept-2024.gif",
+          "/images/projects/ambuja/Ambuja-Taal-Kutir-Brochure-March-2024.gif"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "earth-day-network",
+      "title": "Earth Day Network",
+      "summaryTitle": "Earth Day Network",
+      "projectDescription": "EDN is the organisation that founded Earth Day in 1970. ",
+      "question": "?",
+      "answer": "?",
+      "summary": "Our eco-sensitive designs for this American NGO helped mobilise efforts in India and beyond.",
+      "meta": {
+        "services": "Brochures | eBooks | Invitations | Merchandise | Posters | Presentations | Social Media",
+        "client": "Earth Day Network",
+        "sector": "CSR"
+      },
+      "category": [
+        "csr"
+      ],
+      "tags": [
+        "Logos",
+        "Certificates",
+        "Posters",
+        "Social Media",
+        "Stationery",
+        "Brochures",
+        "Merchandise",
+        "eBooks",
+        "Invitations",
+        "Presentations",
+        "Printing",
+        "Digital"
+      ],
+      "mainImage": "/images/projects/earth-day-network/1781766968627-254771355-EDN-Digital-Earth-Reel-2025-Poster-April-2025.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/earth-day-network/EDN-Mitra-PPT-April-2026.jpg",
+          "/images/projects/earth-day-network/EDN-Faith-and-Environment-PPT-August-2025.jpg",
+          "/images/projects/earth-day-network/EDN-IESW-2025-PPT-July-2025.jpg",
+          "/images/projects/earth-day-network/EDN-Women-Farm-Managers-PPT-July-2025.jpg",
+          "/images/projects/earth-day-network/EDN-Deforestation-Heatwave-and-Disaster-PPT-June-2025.jpg",
+          "/images/projects/earth-day-network/EDN-Women-Leader-Climate-PPT-June-2025.jpg",
+          "/images/projects/earth-day-network/EDN-Climate-Education-PPT-April-2025.jpg",
+          "/images/projects/earth-day-network/EDN-1-5-Climate-Crisis-Business-PPT-April-2025.jpg",
+          "/images/projects/earth-day-network/EDN-Canopy-Project-PPT-March-2025.jpg",
+          "/images/projects/earth-day-network/EDN-ClimateLiteracy-PPT-Nov-2021.jpg",
+          "/images/projects/earth-day-network/EDN-Motorcycle-PPT-2022.jpg",
+          "/images/projects/earth-day-network/EDN-RestoreOurEarth-PPT-March-2021.jpg"
+        ],
+        "slider2": [
+          "/images/projects/earth-day-network/EDN-ebook-Academic-Institutions-01-Feb-2023.jpg",
+          "/images/projects/earth-day-network/EDN-ebook-Academic-Institutions-02-Feb-2023.jpg",
+          "/images/projects/earth-day-network/EDN-ebook-Academic-Institutions-03-Feb-2023.jpg",
+          "/images/projects/earth-day-network/EDN-ebook-Academic-Institutions-04-Feb-2023.jpg",
+          "/images/projects/earth-day-network/EDN-eBook-Pathway-2015.jpg",
+          "/images/projects/earth-day-network/EDN-eBook-Pathway-2017.jpg",
+          "/images/projects/earth-day-network/EDN-Sustainable-Fashion-March-2026.jpg",
+          "/images/projects/earth-day-network/EDN-Sustainable-Fashion-Open-01-March-2026.jpg",
+          "/images/projects/earth-day-network/EDN-Sustainable-Fashion-Open-02-March-2026.jpg",
+          "/images/projects/earth-day-network/EDN-Sustainable-Fashion-Open-03-March-2026.jpg"
+        ],
+        "column1": [
+          "/images/projects/earth-day-network/EDN-Posters-April-2026.gif",
+          "/images/projects/earth-day-network/EDN-SM-EcoComicArtContestPost-May-2025.jpg",
+          "/images/projects/earth-day-network/EDN-Certificates-2024-25.jpg",
+          "/images/projects/earth-day-network/EDN-Plastics-Wildlife-Invite-April-2024.gif",
+          "/images/projects/earth-day-network/EDN-eBook-Climate-Change-Aug-2023.gif",
+          "/images/projects/earth-day-network/EDN-Spice-Bageecha-WhatsApp.jpg",
+          "/images/projects/earth-day-network/EDN-Folder-March-2024.jpg",
+          "/images/projects/earth-day-network/EDN-Folk-Art-eBook-Sept-2024.gif",
+          "/images/projects/earth-day-network/EDN-Games.gif",
+          "/images/projects/earth-day-network/EDN-Posters.gif"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "idlygo",
+      "title": "IdlyGo",
+      "summaryTitle": "IdlyGo",
+      "projectDescription": "IdlyGo transforms the concept of meals on wheels with a healthy affordable offering of idlis. ",
+      "question": "?",
+      "answer": "?",
+      "summary": "IdlyGo transforms the concept of meals on wheels with a healthy affordable offering of idlis. We designed the logo and collaterals in a way that was bound to attract attention on the street.",
+      "meta": {
+        "services": "Logo | Packaging | Social Media | Website",
+        "client": "IdlyGo",
+        "sector": "FMCG"
+      },
+      "category": [
+        "fmcg"
+      ],
+      "tags": [
+        "Logo",
+        "Packaging",
+        "Social Media",
+        "Website",
+        "Digital",
+        "Printing",
+        "Signage",
+        "Billboard",
+        "Danglers",
+        "Advertisement",
+        "Newspapers",
+        "Flyers",
+        ""
+      ],
+      "mainImage": "/images/projects/idlygo/1750748033087-416618638-IdlyGo-Ultadanga-store-April-2025.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/idlygo/1750748033099-666287332-IdlyGo-IPL-01-March-2025.jpg",
+          "/images/projects/idlygo/1750748033117-9609194-IdlyGo-IPL-02-March-2025-01.jpg"
+        ],
+        "slider2": [
+          "/images/projects/idlygo/1750748033123-349218362-IdlyGo-Kasba-GSB-01-Feb-2025.jpg",
+          "/images/projects/idlygo/1750748033128-994267898-IdlyGo-Kasba-GSB-02-Feb-2025.jpg",
+          "/images/projects/idlygo/1750748033143-105387299-IdlyGo-Kasba-GSB-Sample-Feb-2025.jpg"
+        ],
+        "column1": [
+          "/images/projects/idlygo/1750748033152-986872804-IdlyGo-Aloo-Bonda-Dangler-March-2025-01.jpg",
+          "/images/projects/idlygo/1750748033196-973800912-IdlyGo-Aloo-Bonda-Poster-March-2025-02.jpg",
+          "/images/projects/idlygo/IdlyGo-Madurai-Ad-April-2025.jpg",
+          "/images/projects/idlygo/IdlyGo-Translite1-April-2025.jpg"
+        ],
+        "column2": [
+          "/images/projects/idlygo/1750748033212-725448100-IdlyGo-Posters-Jan-2025.gif",
+          "/images/projects/idlygo/1750748033223-284023331-IdlyGo-Ragi-Millet-Batter-Ragi-Leaflet-Feb-2025.jpg",
+          "/images/projects/idlygo/1750748033220-572107771-Idlygo-Ragi-Millet-Batter-Danglers-Jan-2025.gif"
+        ]
+      }
+    },
+    {
+      "project_id": "itchotels",
+      "title": "ITC Hotels",
+      "summaryTitle": "ITC Hotels",
+      "projectDescription": "The task for ITC Hotels was to match the elegance of its epicurean offerings with stylish designs.",
+      "question": "?",
+      "answer": "?",
+      "summary": "The task for ITC Hotels was to match the elegance of its epicurean offerings with stylish designs. Our design architecture for ITC Sonar and ITC Royal Bengal enhanced the concept of heritage with soul, celebrating a glorious past and a brilliant future.",
+      "meta": {
+        "services": "Brochures | Leaflets | Posters | Tent Cards | Surface Graphics | Stationery | Gifting",
+        "client": "ITC Hotels",
+        "sector": "Luxury"
+      },
+      "category": [
+        "luxury"
+      ],
+      "tags": [
+        "Brochures",
+        "Leaflets",
+        "Posters",
+        "Tent Cards",
+        "Surface Graphics",
+        "Stationery",
+        "Gifting",
+        "Printing",
+        "Greetings"
+      ],
+      "mainImage": "/images/projects/itchotels/1750758253882-592084874-ITC-Sonar-Paan-Poster-16-9-Jan-2025.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/itchotels/ITC-Sonar-Eden-Pavilion-Posters-16-9-Jan-2025-01.jpg",
+          "/images/projects/itchotels/ITC-Sonar-Eden-Pavilion-Posters-16-9-Jan-2025-02.jpg",
+          "/images/projects/itchotels/ITC-Sonar-Eden-Pavilion-Posters-16-9-Jan-2025-03.jpg",
+          "/images/projects/itchotels/ITC-Sonar-Eden-Pavilion-Posters-16-9-Jan-2025-04.jpg",
+          "/images/projects/itchotels/ITC-Sonar-Eden-Pavilion-Posters-16-9-Jan-2025-05.jpg",
+          "/images/projects/itchotels/ITC-Sonar-Eden-Pavilion-Posters-16-9-Jan-2025-06.jpg",
+          "/images/projects/itchotels/ITC-Sonar-Eden-Pavilion-Posters-16-9-Jan-2025-07.jpg",
+          "/images/projects/itchotels/ITC-Sonar-Eden-Pavilion-Posters-16-9-Jan-2025-08.jpg",
+          "/images/projects/itchotels/ITC-Sonar-Eden-Pavilion-Posters-16-9-Jan-2025-09.jpg",
+          "/images/projects/itchotels/ITC-Sonar-Eden-Pavilion-Posters-16-9-Jan-2025-10.jpg",
+          "/images/projects/itchotels/ITC-Sonar-Eden-Pavilion-Posters-16-9-Jan-2025-11.jpg",
+          "/images/projects/itchotels/ITC-Sonar-Eden-Pavilion-Posters-16-9-Jan-2025-12.jpg",
+          "/images/projects/itchotels/ITC-Sonar-Eden-Pavilion-Posters-16-9-Jan-2025-13.jpg"
+        ],
+        "slider2": [],
+        "column1": [
+          "/images/projects/itchotels/1750754816272-947947567-ITC-Sonar-Compliments-Card-Jan-2025.gif",
+          "/images/projects/itchotels/1750754816274-322845343-ITC-Sonar-MyGate-Jan-2025.gif",
+          "/images/projects/itchotels/1750754816276-696364173-ITC-Sonar-SunBoard-Poster-Jan-2025.jpg"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "kothari",
+      "title": "Kothari",
+      "summaryTitle": "Kothari",
+      "projectDescription": "Kothari is a century old brand which manufactures thermal wear. ",
+      "question": "?",
+      "answer": "?",
+      "summary": "Kothari is a century old brand which manufactures thermal wear. Our logo for the brand highlighted its 100 year old family tradition while the packaging embraces different approaches to warmth from the emotional to the stylish.",
+      "meta": {
+        "services": "Logo | Packaging",
+        "client": "Kothari",
+        "sector": "Lifestyle"
+      },
+      "category": [
+        "lifestyle"
+      ],
+      "tags": [
+        "Logo",
+        "Packaging",
+        "Printing",
+        "Branding",
+        "Bag",
+        "Signage",
+        "Billboard"
+      ],
+      "mainImage": "/images/projects/kothari/1750759056987-630093302-Kothari-Mercerized-Posters-April-2025.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/kothari/Kothari-Carry-Bag-01-April-2025.jpg",
+          "/images/projects/kothari/Kothari-Carry-Bag-02-April-2025.jpg",
+          "/images/projects/kothari/Kothari-Carry-Bag-03-April-2025.jpg"
+        ],
+        "slider2": [],
+        "column1": [
+          "/images/projects/kothari/1750759057049-851433189-Kothari-Freedom-Kiosk-02-April-2025.jpg",
+          "/images/projects/kothari/1750759057059-997157399-Kothari-Freedom-Kiosk-03-April-2025.jpg",
+          "/images/projects/kothari/1750759057092-315060551-Kothari-Freedom-Kiosk-04-April-2025.jpg",
+          "/images/projects/kothari/Kothari-Freedom-Kiosk-01-April-2025.jpg"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "manovikas-kendra",
+      "title": "Manovikas Kendra",
+      "summaryTitle": "Manovikas Kendra",
+      "projectDescription": "The communication for Manovikas Kendra, an institute for differently abled children, was designed to give wings to the aspirations and imagination of the children.",
+      "question": "?",
+      "answer": "?",
+      "summary": "The communication for Manovikas Kendra, an institute for differently abled children, was designed to give wings to the aspirations and imagination of the children.",
+      "meta": {
+        "services": "Annual Report | Brochure | Social Media | Digital",
+        "client": "Manovikas Kendra",
+        "sector": "Education"
+      },
+      "category": [
+        "education"
+      ],
+      "tags": [
+        "Printing",
+        "Branding",
+        "Annual Report",
+        "Brochure",
+        "Social Media"
+      ],
+      "mainImage": "/images/projects/manovikas-kendra/1750762629978-400967638-MVK-Coaster-Mug-16-9-May-2025.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/manovikas-kendra/MVK-01-Autism Awareness Day 02-April-2025.png",
+          "/images/projects/manovikas-kendra/MVK-02-Autism Awareness Day 03-April-2025.png",
+          "/images/projects/manovikas-kendra/MVK-04-World Health Day-April-2025.png",
+          "/images/projects/manovikas-kendra/MVK-IG-POST-She-Awards-April-2025.jpg"
+        ],
+        "slider2": [],
+        "column1": [
+          "/images/projects/manovikas-kendra/MVK-Brand-Tag-May-2025.jpg",
+          "/images/projects/manovikas-kendra/MVK-Gift-H-Card-May-2025.jpg",
+          "/images/projects/manovikas-kendra/MVK-Gift-Wrapper-May-2025.jpg",
+          "/images/projects/manovikas-kendra/MVK-Paper-Bags-May-2025.jpg"
+        ],
+        "column2": [
+          "/images/projects/manovikas-kendra/MVK-Gift-V-Card-May-2025.jpg",
+          "/images/projects/manovikas-kendra/MVK-Gift-Tag-02-May-2025.jpg",
+          "/images/projects/manovikas-kendra/MVK-A5-Flyer-April-2025.jpg",
+          "/images/projects/manovikas-kendra/MVK-WhatsApp-Calendar-01-April-2025.jpg"
+        ]
+      }
+    },
+    {
+      "project_id": "the-newtown-school",
+      "title": "The Newtown School",
+      "summaryTitle": "The Newtown School",
+      "projectDescription": "The Newtown School needed brand communication that matched their futuristic approach. ",
+      "question": "?",
+      "answer": "?",
+      "summary": "Our brand communication perfectly portrays a futuristic approach to education that  is accessible, contemporary and highly appealing to both parents and children. ",
+      "meta": {
+        "services": "Logo | Brochures | Calendars | Diaries | Events | Hoardings | Invitations | Merchandise | Print Ads | Social Media | Stationery",
+        "client": "The Newtown School, Kolkata",
+        "sector": "Education"
+      },
+      "category": [
+        "education"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/the-newtown-school/1781086703037-147452365-NTS-Notebook-2018.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/the-newtown-school/NTS-WhatsApp-Annual-Day-Invite-Feb-2025.jpg",
+          "/images/projects/the-newtown-school/NTS-YouthCast-logo-Aug-2025.jpg",
+          "/images/projects/the-newtown-school/NTS-Indigo-Full-Page-Ad-Feb-2025.jpg"
+        ],
+        "slider2": [
+          "/images/projects/the-newtown-school/NTS-SM-Post-Diary-Post-Jan-2026.png",
+          "/images/projects/the-newtown-school/NTS-SM-Post-TEDx-Posts-Sept-2025.png",
+          "/images/projects/the-newtown-school/NTS-SM-Post-Student-Council-Members-April-2025.png",
+          "/images/projects/the-newtown-school/NTS-SM-Post-10th-Year-Poem-Carousel-April-2025.png"
+        ],
+        "column1": [
+          "/images/projects/the-newtown-school/NTS-Pennant-Flag-Investiture-Ceremony-26-27.gif",
+          "/images/projects/the-newtown-school/NTS-All-Books-March-2026.gif",
+          "/images/projects/the-newtown-school/NTS-Desktop-Calendar-April-26-March-27.gif",
+          "/images/projects/the-newtown-school/NTS-Diary-Dec-2025.gif",
+          "/images/projects/the-newtown-school/NTS-YearBook-2026-Nov-2025.gif",
+          "/images/projects/the-newtown-school/NTS-Durga-Puja-Greetings-Card-Sept-2025.jpg",
+          "/images/projects/the-newtown-school/NTS-Posters-2019-2026.gif",
+          "/images/projects/the-newtown-school/NTS-Novus26.gif",
+          "/images/projects/the-newtown-school/NTS-Event-WinterHogwarts-Winter-Carnival-Jan-2026.gif",
+          "/images/projects/the-newtown-school/NTS-Annual-Sports-Day-Jan-2026.gif"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "aakash",
+      "title": "Aakash",
+      "summaryTitle": "Aakash",
+      "projectDescription": "",
+      "question": "",
+      "answer": "",
+      "summary": "Our designs kindled the enthusiasm to perform better amongst students seeking top results in Medical and IIT-JEE examinations, offering them higher aspirations and newer horizons.",
+      "meta": {
+        "services": "Diaries | Emailers | Hoardings | Leaflets | Print Ads",
+        "client": "",
+        "sector": "Education"
+      },
+      "category": [
+        "education"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/aakash/1779865353051-384506195-Aakash-Diary-Nov-2023-main.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/aakash/Aakash-Diary-Nov-2023-02.jpg",
+          "/images/projects/aakash/Aakash-Diary-Nov-2023-03.jpg",
+          "/images/projects/aakash/Aakash-Diary-Nov-2023-04.jpg"
+        ],
+        "slider2": [],
+        "column1": [
+          "/images/projects/aakash/Aakash-Diary-Jan-2022.gif",
+          "/images/projects/aakash/Aakash-Diary-Jan-2021.gif",
+          "/images/projects/aakash/Aakash-JEE-Result-Announcement-Ad-2019.jpg",
+          "/images/projects/aakash/Aakash-Online-Emailers-Aug-2020.gif",
+          "/images/projects/aakash/Aakash-Rajesh--Fernando-Event-Apr-2019.jpg",
+          "/images/projects/aakash/Aakash-Repeater-Hoarding-Apr-2019.jpg"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "anjika",
+      "title": "Anjika",
+      "summaryTitle": "Anjika",
+      "projectDescription": "Anjika is a dance troupe founded by famed Manipuri dancer Priti Patel. The brand identity and collaterals reflect the elegance and versatility of her art form.",
+      "question": "X",
+      "answer": "X",
+      "summary": "The brand identity and collaterals designed for this famous dance troupe directly reflect the elegance, fluid movements and versatility of the Manipuri art form.",
+      "meta": {
+        "services": "Logo | Calendars | Hoardings | Invitations | Social Media",
+        "client": "",
+        "sector": "Art & Culture"
+      },
+      "category": [
+        "art-&-culture",
+        "art-%26-culture"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/anjika/1779875064600-272751943-Anjika-Book-Feb-2025.gif",
+      "images": {
+        "slider1": [],
+        "slider2": [
+          "/images/projects/anjika/anjika-event-priti-patel-calendar-2013.jpg",
+          "/images/projects/anjika/anjika-event-priti-patel-invite-2000.jpg",
+          "/images/projects/anjika/anjika-event-priti-patel-khonjen-ama-invite-2014.jpg",
+          "/images/projects/anjika/anjika-event-priti-patel-maharas-invite1-1996.jpg",
+          "/images/projects/anjika/anjika-event-priti-patel-maharas-invite2-1996.jpg",
+          "/images/projects/anjika/anjika-event-priti-patel-manipuri-therapy-invite-1996.jpg",
+          "/images/projects/anjika/anjika-event-priti-patel-meihourol-calendar-2013.jpg",
+          "/images/projects/anjika/anjika-event-priti-patel-quest-harmony-invite-2000.jpg"
+        ],
+        "column1": [
+          "/images/projects/anjika/Anjika-Standy-April-2026.jpg",
+          "/images/projects/anjika/Anjika-SM.gif",
+          "/images/projects/anjika/Anjika-Ankur-Invite-Card-March-2024.jpg",
+          "/images/projects/anjika/Anjika-Binodini-Jan-2023.gif",
+          "/images/projects/anjika/Anjika-25Years-Card-Feb-2020.jpg",
+          "/images/projects/anjika/anjika-event-priti-patel-ishano-invite-2012.jpg"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "bigo",
+      "title": "BiGo",
+      "summaryTitle": "",
+      "projectDescription": "",
+      "question": "",
+      "answer": "",
+      "summary": "We translated the core tagline ‘Just Go’ into a vibrant visual identity, developing a  dynamic logo, accessories and merchandise that capture the raw spirit of urban adventure for the city’s newest electric bike service.",
+      "meta": {
+        "services": "Logo | Accessories | App | Merchandise | Stationery",
+        "client": "",
+        "sector": "B2B"
+      },
+      "category": [
+        "b2b"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/bigo/1780390730931-587281060-BiGO-Hero.gif",
+      "images": {
+        "slider1": [],
+        "slider2": [],
+        "column1": [
+          "/images/projects/bigo/Bigo-Bike-Helment-May-2024.gif",
+          "/images/projects/bigo/Bigo-Tshirts-May-2024.jpg",
+          "/images/projects/bigo/Bigo-Stationery-May-2024.jpg",
+          "/images/projects/bigo/Bigo-App-May-2024.jpg"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "limtex",
+      "title": "Limtex Tea",
+      "summaryTitle": "",
+      "projectDescription": "",
+      "question": "",
+      "answer": "",
+      "summary": "Our design philosophy weaves an immersive narrative around the experiential quality of every sip, transforming everyday packaging into a sensory journey.",
+      "meta": {
+        "services": "Logo | Corporate Profiles | Exhibitions | Gifting | Packaging",
+        "client": "",
+        "sector": "FMCG"
+      },
+      "category": [
+        "fmcg"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/limtex/1780396210563-755039929-Chaify-Packaging-2025.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/limtex/Chaizup-Product-Catalogue-Feb-2023.gif",
+          "/images/projects/limtex/Chaizup-Brochure-2019.gif"
+        ],
+        "slider2": [
+          "/images/projects/limtex/Chaizup-Gold-Premium-Kadak-Nov-2020.jpg",
+          "/images/projects/limtex/Castle-Tea-Packaging-Oct-2019.jpg",
+          "/images/projects/limtex/Chaizup-Packaging.jpg",
+          "/images/projects/limtex/Nargis-GiftBox-Jan-2019.jpg",
+          "/images/projects/limtex/Chaizup-Stall-Outdoor-Exhibition-2019.jpg",
+          "/images/projects/limtex/limtex-nargis-biscuits-packaging-2013.jpg",
+          "/images/projects/limtex/limtex-nargis-black-tea-packaging-2013.jpg",
+          "/images/projects/limtex/limtex-nargis-black-tea-packaging-2014.jpg"
+        ],
+        "column1": [
+          "/images/projects/limtex/Chaizup-Wellness-February-2022.gif",
+          "/images/projects/limtex/Nargis-Milk-Masala-Cardamom-and-Ginger-Pack-August-2024.jpg",
+          "/images/projects/limtex/Chaizup-TheGoodCop-Packaging-June-2023.gif",
+          "/images/projects/limtex/Chaizup-Quick-Tea-May-2023.jpg",
+          "/images/projects/limtex/Chaizup-Cappuccino-February-2023.jpg",
+          "/images/projects/limtex/Chaizup-Daily-Splash-July-2022-April-2023.gif"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "anthea-group",
+      "title": "Anthea Group",
+      "summaryTitle": "",
+      "projectDescription": "",
+      "question": "",
+      "answer": "",
+      "summary": "We set out a design horizon by creating a visual vocabulary that celebrates chemistry that cares.",
+      "meta": {
+        "services": "Catalogues | Exhibitions | Leaflets | Social Media",
+        "client": "",
+        "sector": "FMCG"
+      },
+      "category": [
+        "fmcg"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/anthea-group/1780466338063-552692681-Anthea-Group-Stall-March-2026.jpg",
+      "images": {
+        "slider1": [],
+        "slider2": [],
+        "column1": [
+          "/images/projects/anthea-group/Anthea-Group-SM-Linkedin-Post-June-2026.jpg",
+          "/images/projects/anthea-group/Anthea-Group-Boxes-Bottles-March-2026.jpg"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "birla-academy-of-art-culture",
+      "title": "Birla Academy of Art & Culture",
+      "summaryTitle": "",
+      "projectDescription": "",
+      "question": "",
+      "answer": "",
+      "summary": "Our designs for the annual exhibition communication span decades. By fusing bold typography with vibrant graphics, we continually curate a visual mélange that mirrors the serendipitous nature of art and culture.",
+      "meta": {
+        "services": "Invitations | Print Ads",
+        "client": "",
+        "sector": "Art & Culture"
+      },
+      "category": [
+        "art-%26-culture"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/birla-academy-of-art-culture/1780574334562-407272062-Birla-Academy-58-Card-Dec-2024.gif",
+      "images": {
+        "slider1": [],
+        "slider2": [],
+        "column1": [
+          "/images/projects/birla-academy-of-art-culture/Birla-Academy-57-Card-Dec-2023.gif",
+          "/images/projects/birla-academy-of-art-culture/Birla-Academy-57-WhatsApp-Dec-2023.gif",
+          "/images/projects/birla-academy-of-art-culture/Birla-Academy-45-Card.jpg",
+          "/images/projects/birla-academy-of-art-culture/Birla-Academy-43-Ad-Newspaper.jpg"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "century-ply",
+      "title": "Century Ply",
+      "summaryTitle": "",
+      "projectDescription": "",
+      "question": "",
+      "answer": "",
+      "summary": "Leveraging our expertise in premium publication design, we developed a range of catalogues rooted in the tranquillity of nature, bringing unique wood grains and stylistic elegance to the forefront.",
+      "meta": {
+        "services": "Catalogues",
+        "client": "",
+        "sector": "Lifestyle"
+      },
+      "category": [
+        "lifestyle"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/century-ply/1780477056215-30193973-Century-Natzurawoods-Catalogue-Sept-2023.gif",
+      "images": {
+        "slider1": [],
+        "slider2": [],
+        "column1": [
+          "/images/projects/century-ply/Century-Veneers-Grohn-Brochure-2025.gif",
+          "/images/projects/century-ply/Century-Dyed-Catalogue-Dec-2024.gif"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "godrej",
+      "title": "Godrej",
+      "summaryTitle": "",
+      "projectDescription": "",
+      "question": "",
+      "answer": "",
+      "summary": "We designed communication for appliances that matched where their consumers had arrived—modern, design-conscious and confident. ",
+      "meta": {
+        "services": "Brochures | POP | Social Media",
+        "client": "",
+        "sector": "Consumer Durables"
+      },
+      "category": [
+        "consumer-durables"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/godrej/1780659558445-957665372-Godrej-SM.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/godrej/Godrej-Brochure-01-Jan-2026.jpg",
+          "/images/projects/godrej/Godrej-Brochure-02-Jan-2026.jpg",
+          "/images/projects/godrej/Godrej-Brochure-03-Jan-2026.jpg",
+          "/images/projects/godrej/Godrej-Brochure-04-Jan-2026.jpg",
+          "/images/projects/godrej/Godrej-Brochure-05-Jan-2026.jpg",
+          "/images/projects/godrej/Godrej-Brochure-06-Jan-2026.jpg",
+          "/images/projects/godrej/Godrej-Brochure-07-Jan-2026.jpg",
+          "/images/projects/godrej/Godrej-Brochure-08-Jan-2026.jpg",
+          "/images/projects/godrej/Godrej-Brochure-09-Jan-2026.jpg",
+          "/images/projects/godrej/Godrej-Brochure-10-Jan-2026.jpg"
+        ],
+        "slider2": [],
+        "column1": [
+          "/images/projects/godrej/Godrej-eCatalogue.gif",
+          "/images/projects/godrej/Godrej-QuantumClean-TopLoader-June-2025.jpg"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "jayshree-tea",
+      "title": "Jay Shree Tea",
+      "summaryTitle": "",
+      "projectDescription": "",
+      "question": "",
+      "answer": "",
+      "summary": "Honouring the rich heritage of one of India’s largest tea exporters, we delivered a complete brand transformation across physical and digital landscapes. Our multidisciplinary approach seamlessly integrated premium packaging, immersive retail spaces and an intuitive digital ecosystem to help capture the global market.",
+      "meta": {
+        "services": "Diaries | Hoardings | Packaging | Retail | Website",
+        "client": "",
+        "sector": "FMCG"
+      },
+      "category": [
+        "fmcg"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/jayshree-tea/1780564873900-669685875-Jayshree-Tea-Puttabong-Packaging-Sept-2021.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/jayshree-tea/Jayshree-Tea-Website-Desktop-01-February-2022.jpg",
+          "/images/projects/jayshree-tea/Jayshree-Tea-Website-Desktop-02-February-2022.jpg",
+          "/images/projects/jayshree-tea/Jayshree-Tea-Website-Desktop-03-February-2022.jpg",
+          "/images/projects/jayshree-tea/Jayshree-Tea-Website-Desktop-04-February-2022.jpg",
+          "/images/projects/jayshree-tea/Jayshree-Tea-Website-Desktop-05-February-2022.jpg",
+          "/images/projects/jayshree-tea/Jayshree-Tea-Website-Mobile-February-2022.jpg"
+        ],
+        "slider2": [
+          "/images/projects/jayshree-tea/Jayshree-Tea-DiaryBook-2010.jpg",
+          "/images/projects/jayshree-tea/Jayshree-Tea-DiaryBook-2010-Open-01.jpg",
+          "/images/projects/jayshree-tea/Jayshree-Tea-DiaryBook-2010-Open-02.jpg",
+          "/images/projects/jayshree-tea/Jayshree-Tea-DiaryBook-2010-Open-03.jpg",
+          "/images/projects/jayshree-tea/Jayshree-Tea-DiaryBook-2011.jpg",
+          "/images/projects/jayshree-tea/Jayshree-Tea-DiaryBook-2011-Open-01.jpg",
+          "/images/projects/jayshree-tea/Jayshree-Tea-DiaryBook-2011-Open-02.jpg",
+          "/images/projects/jayshree-tea/Jayshree-Tea-DiaryBook-2011-Open-03.jpg",
+          "/images/projects/jayshree-tea/Jayshree-Tea-DiaryBook-2012.jpg"
+        ],
+        "column1": [
+          "/images/projects/jayshree-tea/Jayshree-Tea-Packaging.gif",
+          "/images/projects/jayshree-tea/Jayshree-Tea-Packaging-Tags-Oct-2023.gif",
+          "/images/projects/jayshree-tea/Jayshree-Tea-Cart-Nov-2023.gif",
+          "/images/projects/jayshree-tea/Jayshree-Tea-Mart-Dec-2023.jpg"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "mahadevi-birla-world-academy",
+      "title": "Mahadevi Birla World Academy",
+      "summaryTitle": "",
+      "projectDescription": "",
+      "question": "",
+      "answer": "",
+      "summary": "We took a refreshing approach to institutional communication by pairing a symbolic ‘flame of knowledge’ logo with playful, colourful surface graphics to actively champion the philosophy that learning is fun.",
+      "meta": {
+        "services": "Logo | Accessories | Brochures | Hoardings | Stationery | Wall Graphics",
+        "client": "",
+        "sector": "Education"
+      },
+      "category": [
+        "education"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/mahadevi-birla-world-academy/1780658064268-783359402-MBWA-Brand-Identity-Logo-2015.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/mahadevi-birla-world-academy/1-mahadevi-birla-world-academy-school-prospectus-brochure-2015-01.jpg",
+          "/images/projects/mahadevi-birla-world-academy/2-mahadevi-birla-world-academy-school-prospectus-brochure-2015-02.jpg",
+          "/images/projects/mahadevi-birla-world-academy/3-mahadevi-birla-world-academy-school-prospectus-brochure-2015-04.jpg"
+        ],
+        "slider2": [
+          "/images/projects/mahadevi-birla-world-academy/mahadevi-birla-world-academy-school-surface-graphics-wall-panels-2015-01.jpg",
+          "/images/projects/mahadevi-birla-world-academy/mahadevi-birla-world-academy-school-surface-graphics-wall-panels-2015-02.jpg",
+          "/images/projects/mahadevi-birla-world-academy/mahadevi-birla-world-academy-school-surface-graphics-wall-panels-2015-03.jpg",
+          "/images/projects/mahadevi-birla-world-academy/mahadevi-birla-world-academy-school-surface-graphics-wall-panels-2015-04.jpg"
+        ],
+        "column1": [
+          "/images/projects/mahadevi-birla-world-academy/MBWA-Letterhead-Visiting-Card-2015.jpg",
+          "/images/projects/mahadevi-birla-world-academy/MBWA-Badges-Signages.gif",
+          "/images/projects/mahadevi-birla-world-academy/MBWA-Diary-2015.jpg",
+          "/images/projects/mahadevi-birla-world-academy/MBWA-Newspaper-AD-August-2024.jpg",
+          "/images/projects/mahadevi-birla-world-academy/MBWA-Outdoor-Hoarding-2015.jpg",
+          "/images/projects/mahadevi-birla-world-academy/MBWA-ID-Card-2015.jpg"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "multimoney-forex",
+      "title": "Multimoney",
+      "summaryTitle": "",
+      "projectDescription": "",
+      "question": "",
+      "answer": "",
+      "summary": "We designed a corporate logo and website for the Forex Division, using a strategic blend of sleek vector graphics and purposeful photography to clearly articulate their unique financial advantages across diverse client verticals.",
+      "meta": {
+        "services": "Logo | Website",
+        "client": "",
+        "sector": "Finance"
+      },
+      "category": [
+        "finance"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/multimoney-forex/1780898804821-58859499-Multimoney-Forex-Logo-September-2023.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/multimoney-forex/Multimoney-Forex-Website-01-March-2024.jpg",
+          "/images/projects/multimoney-forex/Multimoney-Forex-Website-02-March-2024.jpg",
+          "/images/projects/multimoney-forex/Multimoney-Forex-Website-03-March-2024.jpg",
+          "/images/projects/multimoney-forex/Multimoney-Forex-Website-04-March-2024.jpg",
+          "/images/projects/multimoney-forex/Multimoney-Forex-Website-05-March-2024.jpg"
+        ],
+        "slider2": [],
+        "column1": [],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "snobite",
+      "title": "SnoBite",
+      "summaryTitle": "",
+      "projectDescription": "",
+      "question": "",
+      "answer": "",
+      "summary": "We designed an extendable packaging template along with other brand collaterals for a colourful range of fruity, freeze-dried snacks.",
+      "meta": {
+        "services": "Logo | Brochures | Exhibitions | Merchandise | Packaging | POP | Website",
+        "client": "",
+        "sector": "FMCG"
+      },
+      "category": [
+        "fmcg"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/snobite/1781159098601-131837398-SnoBite-Pouch-Packaging.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/snobite/Snobite-Jars.jpg",
+          "/images/projects/snobite/Snobite-Sackets.png",
+          "/images/projects/snobite/SnoBite-Outer-Carton-Sticker-August-2024.jpg"
+        ],
+        "slider2": [],
+        "column1": [
+          "/images/projects/snobite/SnoBite-Leaflet-Sept-2024.gif",
+          "/images/projects/snobite/Snobite-Poster-Standy-Sept-2024.jpg",
+          "/images/projects/snobite/SnoBite-POS-Sept-2024.jpg",
+          "/images/projects/snobite/Snobite-WhatsApp-Invite-Sept-2024.gif",
+          "/images/projects/snobite/Snobite-Stall-Sept-2024.gif",
+          "/images/projects/snobite/Snobite-Carry-Bag-August-2024.jpg"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "palki",
+      "title": "Palki",
+      "summaryTitle": "",
+      "projectDescription": "",
+      "question": "",
+      "answer": "",
+      "summary": "Our designs neatly showcase the tasteful offerings of this Indo-ethnic fashion brand for people with an eye for luxury.",
+      "meta": {
+        "services": "Logo | Print Ads | Hoardings | Social Media | Stationery",
+        "client": "",
+        "sector": "Lifestyle"
+      },
+      "category": [
+        "lifestyle"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/palki/1781175379308-858549317-Palki-T2-Ad-Sale14-2024.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/palki/Palki-T2-Ad-Sale09-2019.jpg",
+          "/images/projects/palki/Palki-Newspaper-Ad-Sale08-2018.jpg",
+          "/images/projects/palki/Palki-Newspaper-Ad-Sale07-2017.jpg",
+          "/images/projects/palki/Palki-T2-Ad-Sale06-2016.jpg",
+          "/images/projects/palki/Palki-T2-Beauty.jpg"
+        ],
+        "slider2": [],
+        "column1": [
+          "/images/projects/palki/Palki-Stationary-Set-WhatsApp-Invite-Nov-2025.gif",
+          "/images/projects/palki/Palki-Dangler-February-2022.jpg",
+          "/images/projects/palki/Palki-10-Anniversary-FB-Whatsapp-Jan-2020.jpg",
+          "/images/projects/palki/Palki-Newspaper-Ads-2025-26.gif",
+          "/images/projects/palki/Palki-Hoarding-2025.gif",
+          "/images/projects/palki/Palki-Hoarding-2024.gif"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "iaba-housing",
+      "title": "IABA Housing",
+      "summaryTitle": "",
+      "projectDescription": "",
+      "question": "",
+      "answer": "",
+      "summary": "Our designs are a joyful evolution of the brand identity for a housing company and its project.",
+      "meta": {
+        "services": "Logo | Brochures | Exhibitions | Greetings | Hoardings | Merchandise | Print Ads | Signages",
+        "client": "",
+        "sector": ""
+      },
+      "category": [],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/iaba-housing/1781254466068-812772735-IABA-Housing-Logo-Oct-2020.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/iaba-housing/IABA-Ashavari-Estate-Brochure-01-May-2023.jpg",
+          "/images/projects/iaba-housing/IABA-Ashavari-Estate-Brochure-02-May-2023.jpg",
+          "/images/projects/iaba-housing/IABA-Ashavari-Estate-Brochure-03-May-2023.jpg",
+          "/images/projects/iaba-housing/IABA-Ashavari-Estate-Brochure-04-May-2023.jpg",
+          "/images/projects/iaba-housing/IABA-Ashavari-Estate-Brochure-05-May-2023.jpg",
+          "/images/projects/iaba-housing/IABA-Ashavari-Estate-Brochure-06-May-2023.jpg",
+          "/images/projects/iaba-housing/IABA-Ashavari-Estate-Brochure-07-May-2023.jpg",
+          "/images/projects/iaba-housing/IABA-Ashavari-Estate-Brochure-08-May-2023.jpg",
+          "/images/projects/iaba-housing/IABA-Ashavari-Estate-Brochure-09-May-2023.jpg"
+        ],
+        "slider2": [
+          "/images/projects/iaba-housing/IABA-AE-Newspaper-Press-Ad-August-2022.jpg",
+          "/images/projects/iaba-housing/IABA-Corporate-Newspaper-Ad-July-2022.jpg",
+          "/images/projects/iaba-housing/IABA-Corporate-Recruitment-Ad-Oct-2022.jpg",
+          "/images/projects/iaba-housing/IABA-AE-Newspaper-Ad-ThankYou-Oct-2022.jpg"
+        ],
+        "column1": [
+          "/images/projects/iaba-housing/1781249161101-860252178-IABA-Ashavari-Hoarding-Aug-Jan-2023.gif",
+          "/images/projects/iaba-housing/1781249161096-124444899-IABA-Ashavari-Estate-Application-Form-July-2022.jpg",
+          "/images/projects/iaba-housing/1781249161115-914168377-IABA-Bags-June-2022.jpg",
+          "/images/projects/iaba-housing/1781249161147-926873250-IABA-Tshirt-March-2023.jpg",
+          "/images/projects/iaba-housing/1781249161117-201354745-IABA-Corporate-Brochure-August-2022.gif",
+          "/images/projects/iaba-housing/1781249161145-766532743-IABA-New-Year-Greeting-Jan-2023.jpg",
+          "/images/projects/iaba-housing/1781249161137-11602623-IABA-Corporate-Canopy-Standee-Dec-2022.jpg",
+          "/images/projects/iaba-housing/1781249161141-458326491-IABA-Facade-Signage-Dec-2022.jpg"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "jayshree-mohta",
+      "title": "Jayshree Mohta",
+      "summaryTitle": "",
+      "projectDescription": "",
+      "question": "",
+      "answer": "",
+      "summary": "Over many years of association, we have had the privilege to design invitations for some of her most memorable moments.",
+      "meta": {
+        "services": "Invitations",
+        "client": "",
+        "sector": "Occasions & Gifting"
+      },
+      "category": [
+        "occasions-%26-gifting"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/jayshree-mohta/1781260998749-752647544-Jayashree-Mohta-WhatsApp-Invite-Nov-2025.gif",
+      "images": {
+        "slider1": [],
+        "slider2": [
+          "/images/projects/jayshree-mohta/JM-Cards-01.jpg",
+          "/images/projects/jayshree-mohta/JM-Cards-02.jpg",
+          "/images/projects/jayshree-mohta/JM-Cards-03.jpg",
+          "/images/projects/jayshree-mohta/JM-Cards-04.jpg",
+          "/images/projects/jayshree-mohta/JM-Cards-05.jpg",
+          "/images/projects/jayshree-mohta/JM-Cards-06.jpg",
+          "/images/projects/jayshree-mohta/JM-Cards-07.jpg",
+          "/images/projects/jayshree-mohta/JM-WhatsApp-Invitation-08.jpg"
+        ],
+        "column1": [
+          "/images/projects/jayshree-mohta/Jayashree-Mohta-Letter-Envelope-Sept-2025.jpg",
+          "/images/projects/jayshree-mohta/Jayashree-Mohta-Card-Envelope-Bag-Tag-Nov-2019.jpg",
+          "/images/projects/jayshree-mohta/Jayashree-Mohta-Tent-Card-Dec-2019.jpg",
+          "/images/projects/jayshree-mohta/Jayshree-Mohta-70-Celebrating-Card-Jan-2019.jpg"
+        ],
+        "column2": []
+      }
+    },
+    {
+      "project_id": "suvai",
+      "title": "Suvai",
+      "summaryTitle": "",
+      "projectDescription": "",
+      "question": "",
+      "answer": "",
+      "summary": "Basing our approach on its name, which means ‘taste’, we created a series of appetising designs guaranteed to maximise shelf throw for this Singaporean brand.",
+      "meta": {
+        "services": "Packaging",
+        "client": "",
+        "sector": "FMCG"
+      },
+      "category": [
+        "fmcg"
+      ],
+      "tags": [
+        ""
+      ],
+      "mainImage": "/images/projects/suvai/1782210207926-846759491-Suvai-Dahi-Nov-2025.jpg",
+      "images": {
+        "slider1": [
+          "/images/projects/suvai/Suvai-Masala-Ginger-Cardamom-Chai-Badam-Milk-August-2024.jpg"
+        ],
+        "slider2": [],
+        "column1": [
+          "/images/projects/suvai/Suvai-Chapati-Oct-2024.jpg",
+          "/images/projects/suvai/Suvai-Combo-Offer-Sept-2024.gif",
+          "/images/projects/suvai/Suvai-Chutney-Sambar-August-2024.jpg",
+          "/images/projects/suvai/Suvai-Goodnessme-Cookies-Oct-2025.gif"
+        ],
+        "column2": []
+      }
+    }
+  ]
+}

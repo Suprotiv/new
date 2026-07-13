@@ -1,0 +1,88 @@
+{
+  "members": [
+    {
+      "id": "nidhi-harlalka",
+      "name": "Nidhi Harlalka",
+      "position": "Creative Managing Director++",
+      "image": "/images/team/Nidhi-Harlalka.png",
+      "order": 0
+    },
+    {
+      "id": "nimisha-bowry-dhawan",
+      "name": "Nimisha Bowry Dhawan",
+      "position": "Visual Brand Artist++",
+      "image": "/images/team/Nimisha-Bowry-Dhawan.png",
+      "order": 1
+    },
+    {
+      "id": "shalini-worah",
+      "name": "Shalini Worah",
+      "position": "Visual Brand Artist++",
+      "image": "/images/team/Shalini-Worah.png",
+      "order": 2
+    },
+    {
+      "id": "pravakar-ghosh",
+      "name": "Pravakar Ghosh",
+      "position": "Client Servicing++",
+      "image": "/images/team/Pravakar-Ghosh.png",
+      "order": 3
+    },
+    {
+      "id": "stephen-shedrick",
+      "name": "Stephen Shedrick",
+      "position": "Illustrator & Designer++",
+      "image": "/images/team/Stephen-Shedrick.png",
+      "order": 4
+    },
+    {
+      "id": "aritrodev-bhattacharya",
+      "name": "Aritrodev Bhattacharya",
+      "position": "Visualiser++",
+      "image": "/images/team/Aritrodev-Bhattacharya.png",
+      "order": 5
+    },
+    {
+      "id": "ishan-singh",
+      "name": "Ishan Singh",
+      "position": "Copy & Content Creator++",
+      "image": "/images/team/Ishan-Singh.png",
+      "order": 6
+    },
+    {
+      "id": "navneet-kanoi",
+      "name": "Navneet Kanoi",
+      "position": "Coder & Animator++",
+      "image": "/images/team/Navneet-Kanoi.png",
+      "order": 7
+    },
+    {
+      "id": "dipesh-das",
+      "name": "Dipesh Das",
+      "position": "Production Artist++",
+      "image": "/images/team/Dipesh-Das.png",
+      "order": 8
+    },
+    {
+      "id": "sandip-mondal",
+      "name": "Sandip Mondal",
+      "position": "Production Artist++",
+      "image": "/images/team/Sandip-Mondal.png",
+      "order": 9
+    },
+    {
+      "id": "biranchi-samal",
+      "name": "Biranchi Samal",
+      "position": "Administrator++",
+      "image": "/images/team/Biranchi-Samal.png",
+      "order": 10
+    },
+    {
+      "id": "subhrajit-dhal",
+      "name": "Subhrajit Dhal",
+      "position": "Administrator++",
+      "image": "/images/team/Subhrajit-Dhal.png",
+      "order": 11
+    }
+  ]
+}
