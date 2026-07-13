@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const { getSupabase } = require('../db');
 const dataStore = require('../dataStore');
-const { safeFileName } = require('../storage');
+const { publicUploadPath, safeFileName } = require('../storage');
 
 const IMAGES_ROOT = path.join(__dirname, '..', 'images');
 const SUPABASE_STORAGE_MARKER = '/storage/v1/object/public/';
@@ -80,7 +80,7 @@ function toUploadPath(value, legacyImageMap) {
   );
   const legacyRelativePath = legacyImageMap.get(safeLegacyPath) || safeLegacyPath;
 
-  return `/uploads/${legacyRelativePath}`.replace(/\/+/g, '/');
+  return publicUploadPath(legacyRelativePath);
 }
 
 function convertProject(project, legacyImageMap) {

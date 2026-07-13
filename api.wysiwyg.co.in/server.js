@@ -1,5 +1,4 @@
 const express = require('express');
-const fs = require('fs');
 const path = require('path');
 const cors = require('cors');
 const multer = require('multer');
@@ -9,8 +8,10 @@ const nodemailer = require("nodemailer");
 const dataStore = require('./dataStore');
 const {
   LEGACY_IMAGES_ROOT,
-  UPLOAD_ROOT,
-  localPathFromPublicPath,
+  UPLOAD_DIR,
+  UploadStorageError,
+  ensureUploadDirectory,
+  publicUploadPath,
   removeStorageImage,
   removeStorageImages,
   removeUploadFolder,
@@ -26,7 +27,8 @@ const TEAM_IMAGE_SIZE_LIMIT = 2 * 1024 * 1024;
 
 app.use(cors());
 app.use(express.json());
-app.use('/uploads', express.static(UPLOAD_ROOT));
+ensureUploadDirectory();
+app.use('/uploads', express.static(UPLOAD_DIR));
 app.use('/images', express.static(LEGACY_IMAGES_ROOT));
 
 
@@ -106,26 +108,22 @@ function getProjectIdError(value) {
   return '';
 }
 
-function removeBackendImage(imagePath) {
-  const fullPath = localPathFromPublicPath(imagePath);
-  if (!fullPath) return;
-  if (fs.existsSync(fullPath)) {
-    fs.unlinkSync(fullPath);
-  }
-}
-
-function removeBackendImages(imagePaths = []) {
-  [...new Set(imagePaths.filter(Boolean))].forEach(removeBackendImage);
-}
-
 async function removeImage(imagePath) {
   await removeStorageImage(imagePath);
-  removeBackendImage(imagePath);
 }
 
 async function removeImages(imagePaths = []) {
   await removeStorageImages(imagePaths);
-  removeBackendImages(imagePaths);
+}
+
+function sendUploadStorageError(error, res, fallbackMessage) {
+  if (error instanceof UploadStorageError) {
+    console.error(error.message, error.cause || error);
+    return res.status(error.statusCode || 500).json({ error: error.message });
+  }
+
+  console.error(fallbackMessage, error);
+  return res.status(500).json({ error: fallbackMessage });
 }
 
 function getProjectImagePaths(project) {
@@ -215,18 +213,18 @@ const defaultSiteContent = {
     "home.prefooter.copy": "Creativity isn’t clean. It’s messy,\nunpredictable and beautifully chaotic.\nThat’s where the magic happens— and\nwhere the best stories are born.",
   },
   images: {
-    "home.hero.image": "/uploads/site-content/default/Home-Wysiwyg.png",
-    "home.news.heroImage": "/uploads/site-content/default/img-News-Siddha-Serena.jpeg",
-    "home.news.bottomImage": "/uploads/site-content/default/img-News-Siddha-Serena-bottom.jpeg",
-    "home.featured.image": "/uploads/site-content/default/img-Featured-Ambuja-Neotia.jpg",
-    "home.work.panel1.image": "/uploads/site-content/default/work-SnoBite.jpg",
-    "home.work.panel2.image": "/uploads/site-content/default/work-ITC-Hotel.jpg",
-    "home.work.panel3.image": "/uploads/site-content/default/work-VION.jpg",
-    "home.accolades.1.image": "/uploads/site-content/default/accolades-AMBUJA-UTALIKA.png",
-    "home.accolades.2.image": "/uploads/site-content/default/accolades-VENTURES-FASHION.png",
-    "home.accolades.3.image": "/uploads/site-content/default/accolades-ROTARY-CLUB-OF-CALCUTTA.png",
-    "home.accolades.4.image": "/uploads/site-content/default/accolades-KYOORIUS.png",
-    "home.prefooter.image": "/uploads/site-content/default/pre-footer.png",
+    "home.hero.image": publicUploadPath("site-content/default/Home-Wysiwyg.png"),
+    "home.news.heroImage": publicUploadPath("site-content/default/img-News-Siddha-Serena.jpeg"),
+    "home.news.bottomImage": publicUploadPath("site-content/default/img-News-Siddha-Serena-bottom.jpeg"),
+    "home.featured.image": publicUploadPath("site-content/default/img-Featured-Ambuja-Neotia.jpg"),
+    "home.work.panel1.image": publicUploadPath("site-content/default/work-SnoBite.jpg"),
+    "home.work.panel2.image": publicUploadPath("site-content/default/work-ITC-Hotel.jpg"),
+    "home.work.panel3.image": publicUploadPath("site-content/default/work-VION.jpg"),
+    "home.accolades.1.image": publicUploadPath("site-content/default/accolades-AMBUJA-UTALIKA.png"),
+    "home.accolades.2.image": publicUploadPath("site-content/default/accolades-VENTURES-FASHION.png"),
+    "home.accolades.3.image": publicUploadPath("site-content/default/accolades-ROTARY-CLUB-OF-CALCUTTA.png"),
+    "home.accolades.4.image": publicUploadPath("site-content/default/accolades-KYOORIUS.png"),
+    "home.prefooter.image": publicUploadPath("site-content/default/pre-footer.png"),
   },
 };
 
@@ -386,8 +384,7 @@ app.post("/projects", verifyToken, upload, async (req, res) => {
     res.status(201).json({ message: 'Project added successfully', project });
   } catch (error) {
     await removeImages(uploadedPaths);
-    console.error('Error adding project:', error);
-    res.status(500).json({ error: 'Failed to add project' });
+    return sendUploadStorageError(error, res, 'Failed to add project');
   }
 });
 
@@ -516,8 +513,7 @@ app.put("/projects/:project_id", verifyToken, upload, async (req, res) => {
     res.json({ message: 'Project updated successfully', project });
   } catch (error) {
     await removeImages(uploadedPaths);
-    console.error('Error updating project:', error);
-    res.status(500).json({ error: 'Failed to update project' });
+    return sendUploadStorageError(error, res, 'Failed to update project');
   }
 });
 
@@ -525,12 +521,16 @@ app.put("/projects/:project_id", verifyToken, upload, async (req, res) => {
 app.delete("/projects/:project_id", verifyToken, async (req, res) => {
   const { project_id } = req.params;
 
-  const deletedProject = await dataStore.deleteProject(project_id);
-  if (!deletedProject) return res.status(404).json({ error: 'Project not found' });
+  try {
+    const deletedProject = await dataStore.deleteProject(project_id);
+    if (!deletedProject) return res.status(404).json({ error: 'Project not found' });
 
-  await removeProjectFiles(deletedProject);
+    await removeProjectFiles(deletedProject);
 
-  res.json({ message: 'Project deleted successfully', deleted: deletedProject });
+    res.json({ message: 'Project deleted successfully', deleted: deletedProject });
+  } catch (error) {
+    return sendUploadStorageError(error, res, 'Failed to delete project');
+  }
 });
 
 app.get('/site-content', async (req, res) => {
@@ -575,8 +575,7 @@ app.post('/site-content/image', verifyToken, siteContentUpload.single('image'), 
     }
     res.json({ message: 'Image updated successfully', image: nextImagePath, content });
   } catch (error) {
-    console.error('Error updating site image:', error);
-    res.status(500).json({ error: 'Failed to update site image' });
+    return sendUploadStorageError(error, res, 'Failed to update site image');
   }
 });
 
@@ -706,8 +705,7 @@ app.post('/team', verifyToken, teamUpload.single('image'), handleMulterError, as
     res.status(201).json({ message: 'Team member added successfully', member: created, members: nextMembers });
   } catch (error) {
     await removeImage(uploadedImage);
-    console.error('Error adding team member:', error);
-    res.status(500).json({ error: 'Failed to add team member' });
+    return sendUploadStorageError(error, res, 'Failed to add team member');
   }
 });
 
@@ -763,8 +761,7 @@ app.put('/team/:id', verifyToken, teamUpload.single('image'), handleMulterError,
     res.json({ message: 'Team member updated successfully', member, members: nextMembers });
   } catch (error) {
     await removeImage(uploadedImage);
-    console.error('Error updating team member:', error);
-    res.status(500).json({ error: 'Failed to update team member' });
+    return sendUploadStorageError(error, res, 'Failed to update team member');
   }
 });
 
@@ -779,8 +776,7 @@ app.delete('/team/:id', verifyToken, async (req, res) => {
     const members = await dataStore.getTeamMembers();
     res.json({ message: 'Team member deleted successfully', deleted, members });
   } catch (error) {
-    console.error('Error deleting team member:', error);
-    res.status(500).json({ error: 'Failed to delete team member' });
+    return sendUploadStorageError(error, res, 'Failed to delete team member');
   }
 });
 
@@ -830,8 +826,7 @@ app.post('/clients', verifyToken, clientUpload, handleMulterError, async (req, r
     res.status(201).json({ message: 'Client added successfully', client: created, clients: nextClients });
   } catch (error) {
     await removeImages(uploadedImages);
-    console.error('Error adding client:', error);
-    res.status(500).json({ error: 'Failed to add client' });
+    return sendUploadStorageError(error, res, 'Failed to add client');
   }
 });
 
@@ -899,8 +894,7 @@ app.put('/clients/:id', verifyToken, clientUpload, handleMulterError, async (req
     res.json({ message: 'Client updated successfully', client, clients: nextClients });
   } catch (error) {
     await removeImages(uploadedImages);
-    console.error('Error updating client:', error);
-    res.status(500).json({ error: 'Failed to update client' });
+    return sendUploadStorageError(error, res, 'Failed to update client');
   }
 });
 
@@ -915,8 +909,7 @@ app.delete('/clients/:id', verifyToken, async (req, res) => {
     const clients = await dataStore.getClients();
     res.json({ message: 'Client deleted successfully', deleted, clients });
   } catch (error) {
-    console.error('Error deleting client:', error);
-    res.status(500).json({ error: 'Failed to delete client' });
+    return sendUploadStorageError(error, res, 'Failed to delete client');
   }
 });
 
