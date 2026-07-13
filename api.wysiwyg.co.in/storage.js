@@ -158,6 +158,7 @@ module.exports = {
   UPLOAD_DIR,
   UploadStorageError,
   ensureUploadDirectory,
+  getUploadRelativePath,
   localPathFromPublicPath,
   publicUploadPath,
   removeStorageImage,

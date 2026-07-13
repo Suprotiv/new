@@ -11,6 +11,7 @@ const {
   UPLOAD_DIR,
   UploadStorageError,
   ensureUploadDirectory,
+  getUploadRelativePath,
   publicUploadPath,
   removeStorageImage,
   removeStorageImages,
@@ -136,6 +137,28 @@ function getProjectImagePaths(project) {
   }
 
   return paths;
+}
+
+function getImageIdentity(imagePath) {
+  if (!imagePath || typeof imagePath !== 'string') return '';
+
+  const uploadRelativePath = getUploadRelativePath(imagePath);
+  if (uploadRelativePath) return `/uploads/${uploadRelativePath}`;
+
+  return imagePath;
+}
+
+function getRemovedProjectImagePaths(previousProject, nextProject) {
+  const nextImageIdentities = new Set(
+    getProjectImagePaths(nextProject)
+      .map(getImageIdentity)
+      .filter(Boolean)
+  );
+
+  return getProjectImagePaths(previousProject).filter(imagePath => {
+    const identity = getImageIdentity(imagePath);
+    return identity && !nextImageIdentities.has(identity);
+  });
 }
 
 async function removeProjectFiles(project) {
@@ -433,29 +456,7 @@ app.put("/projects/:project_id", verifyToken, upload, async (req, res) => {
     }
   }
 
-  const oldImages = currentProject.images || {};
   const retained = retainedImages ? JSON.parse(retainedImages) : {};
-
-  const removed = {};
-  const imagesToRemove = [];
-
-  for (const group of ['slider1', 'slider2', 'column1', 'column2']) {
-    const prevGroup = oldImages[group] || [];
-    const keepGroup = retained[group] || [];
-    removed[group] = prevGroup.filter(img => !keepGroup.includes(img));
-
-    for (const imgPath of removed[group]) {
-      // Check if this image is still used in any group of the same project
-      const stillUsedInSameProject = Object.entries(oldImages).some(([g, images]) => {
-        if (g === group) return false; // skip the current group being updated
-        return images.includes(imgPath);
-      });
-    
-      if (!stillUsedInSameProject) {
-        imagesToRemove.push(imgPath);
-      }
-    }
-  }
 
   const uploadedPaths = [];
   
@@ -486,9 +487,7 @@ app.put("/projects/:project_id", verifyToken, upload, async (req, res) => {
     if (mainImageFile) {
       newMainImage = await uploadImageFile(mainImageFile, `projects/${nextProjectId}`);
       uploadedPaths.push(newMainImage);
-      if (currentProject.mainImage) imagesToRemove.push(currentProject.mainImage);
     } else if (retainedMainImage === '' && currentProject.mainImage) {
-      imagesToRemove.push(currentProject.mainImage);
       newMainImage = '';
     }
 
@@ -508,6 +507,7 @@ app.put("/projects/:project_id", verifyToken, upload, async (req, res) => {
       mainImage: newMainImage,
     };
 
+    const imagesToRemove = getRemovedProjectImagePaths(currentProject, nextProject);
     const project = await dataStore.updateProject(currentProjectId, nextProject);
     await removeImages(imagesToRemove);
     res.json({ message: 'Project updated successfully', project });
