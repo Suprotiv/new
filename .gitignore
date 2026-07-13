@@ -12,6 +12,7 @@ coverage/
 
 # API media assets
 api.wysiwyg.co.in/images/
+api.wysiwyg.co.in/uploads/
 
 # Separate frontend repository
 beta.wysiwyg.co.in/

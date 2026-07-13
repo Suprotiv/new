@@ -1,10 +1,29 @@
 const fs = require('fs');
+const os = require('os');
 const path = require('path');
 
 const HOSTINGER_UPLOAD_ROOT = '/domains/api.wysiwyg.co.in/uploads';
-const DEFAULT_UPLOAD_ROOT = fs.existsSync(path.dirname(HOSTINGER_UPLOAD_ROOT))
-  ? HOSTINGER_UPLOAD_ROOT
-  : path.join(__dirname, 'uploads');
+
+function firstUsableUploadRoot() {
+  const candidates = [
+    HOSTINGER_UPLOAD_ROOT,
+    path.join(os.homedir(), 'domains/api.wysiwyg.co.in/uploads'),
+    path.resolve(__dirname, 'uploads'),
+    path.resolve(__dirname, '..', 'uploads'),
+    path.resolve(__dirname, '..', '..', 'uploads'),
+    path.resolve(process.cwd(), 'uploads'),
+    path.resolve(process.cwd(), '..', 'uploads'),
+    path.resolve(process.cwd(), '..', '..', 'uploads'),
+  ];
+
+  const existingUploadRoot = candidates.find(candidate => fs.existsSync(candidate));
+  if (existingUploadRoot) return existingUploadRoot;
+
+  const writableParent = candidates.find(candidate => fs.existsSync(path.dirname(candidate)));
+  return writableParent || path.join(__dirname, 'uploads');
+}
+
+const DEFAULT_UPLOAD_ROOT = firstUsableUploadRoot();
 
 const UPLOAD_ROOT = process.env.UPLOAD_ROOT || DEFAULT_UPLOAD_ROOT;
 const LEGACY_IMAGES_ROOT = path.join(__dirname, 'images');
