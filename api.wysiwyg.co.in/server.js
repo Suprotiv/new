@@ -7,6 +7,11 @@ const jwt = require('jsonwebtoken');
 const axios = require("axios");
 const nodemailer = require("nodemailer");
 const dataStore = require('./dataStore');
+const {
+  removeStorageImage,
+  removeStorageImages,
+  uploadImageFile,
+} = require('./storage');
 const app = express();
 const PORT = process.env.PORT || 4000;
 const SITE_CONTENT_PATH = path.join(__dirname, 'siteContent.json');
@@ -27,20 +32,7 @@ function generateToken(user) {
   return jwt.sign(user, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 }
 
-// Multer storage config
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const projectId = req.params.project_id || req.body.project_id;
-    if (!projectId) return cb(new Error("Project ID is required"));
-    const folderPath = path.join(__dirname, 'images/projects', projectId);
-    fs.mkdirSync(folderPath, { recursive: true });
-    cb(null, folderPath);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + '-' + file.originalname);
-  },
-});
+const storage = multer.memoryStorage();
 
 // Accept multiple fields including mainImage
 const upload = multer({ storage }).fields([
@@ -51,36 +43,10 @@ const upload = multer({ storage }).fields([
   { name: 'column2', maxCount: 20 },
 ]);
 
-const siteContentStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const folderPath = path.join(__dirname, 'images/site-content/uploads');
-    fs.mkdirSync(folderPath, { recursive: true });
-    cb(null, folderPath);
-  },
-  filename: function (req, file, cb) {
-    const safeName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '-');
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, `${uniqueSuffix}-${safeName}`);
-  },
-});
-
-const siteContentUpload = multer({ storage: siteContentStorage });
-
-const teamStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const folderPath = path.join(__dirname, 'images/team');
-    fs.mkdirSync(folderPath, { recursive: true });
-    cb(null, folderPath);
-  },
-  filename: function (req, file, cb) {
-    const safeName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '-');
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, `${uniqueSuffix}-${safeName}`);
-  },
-});
+const siteContentUpload = multer({ storage });
 
 const teamUpload = multer({
-  storage: teamStorage,
+  storage,
   limits: { fileSize: TEAM_IMAGE_SIZE_LIMIT },
   fileFilter: function (req, file, cb) {
     if (!file.mimetype.startsWith('image/')) {
@@ -90,21 +56,8 @@ const teamUpload = multer({
   },
 });
 
-const clientStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const folderPath = path.join(__dirname, 'images/clients');
-    fs.mkdirSync(folderPath, { recursive: true });
-    cb(null, folderPath);
-  },
-  filename: function (req, file, cb) {
-    const safeName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '-');
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, `${uniqueSuffix}-${safeName}`);
-  },
-});
-
 const clientUpload = multer({
-  storage: clientStorage,
+  storage,
   limits: { fileSize: TEAM_IMAGE_SIZE_LIMIT },
   fileFilter: function (req, file, cb) {
     if (!file.mimetype.startsWith('image/')) {
@@ -160,6 +113,16 @@ function removeBackendImages(imagePaths = []) {
   [...new Set(imagePaths.filter(Boolean))].forEach(removeBackendImage);
 }
 
+async function removeImage(imagePath) {
+  await removeStorageImage(imagePath);
+  removeBackendImage(imagePath);
+}
+
+async function removeImages(imagePaths = []) {
+  await removeStorageImages(imagePaths);
+  removeBackendImages(imagePaths);
+}
+
 function getProjectImagePaths(project) {
   const paths = [];
   if (project?.mainImage) paths.push(project.mainImage);
@@ -172,8 +135,8 @@ function getProjectImagePaths(project) {
   return paths;
 }
 
-function removeProjectFiles(project) {
-  removeBackendImages(getProjectImagePaths(project));
+async function removeProjectFiles(project) {
+  await removeImages(getProjectImagePaths(project));
 
   if (project?.project_id) {
     const folderPath = path.join(__dirname, 'images/projects', project.project_id);
@@ -184,7 +147,11 @@ function removeProjectFiles(project) {
 }
 
 function isUploadedSiteContentImage(imagePath) {
-  return Boolean(imagePath && imagePath.startsWith('/images/site-content/uploads/'));
+  return Boolean(
+    imagePath &&
+      (imagePath.startsWith('/images/site-content/uploads/') ||
+        imagePath.includes('/storage/v1/object/public/'))
+  );
 }
 
 const defaultSiteContent = {
@@ -354,8 +321,9 @@ catch (error) {
 }
 });
 
-const buildImagePaths = (projectId, files = []) =>
-  files.map(file => `/images/projects/${projectId}/${file.filename}`);
+async function uploadImageFiles(files = [], folder) {
+  return Promise.all(files.map(file => uploadImageFile(file, folder)));
+}
 
 // POST - Create new project
 app.post("/projects", verifyToken, upload, async (req, res) => {
@@ -377,35 +345,44 @@ app.post("/projects", verifyToken, upload, async (req, res) => {
     return res.status(400).json({ error: projectIdError });
   }
 
-  const mainImageFile = req.files?.mainImage?.[0];
-  const mainImagePath = mainImageFile
-    ? `/images/projects/${project_id}/${mainImageFile.filename}`
-    : '';
-
-  const newProject = {
-    project_id,
-    title,
-    summaryTitle,
-    projectDescription,
-    question,
-    answer,
-    summary,
-    meta: JSON.parse(meta),
-    category: JSON.parse(category),
-    tags: JSON.parse(tags),
-    mainImage: mainImagePath,
-    images: {
-      slider1: buildImagePaths(project_id, req.files?.slider1),
-      slider2: buildImagePaths(project_id, req.files?.slider2),
-      column1: buildImagePaths(project_id, req.files?.column1),
-      column2: buildImagePaths(project_id, req.files?.column2),
-    },
-  };
-
+  const uploadedPaths = [];
   try {
+    const mainImageFile = req.files?.mainImage?.[0];
+    const mainImagePath = mainImageFile
+      ? await uploadImageFile(mainImageFile, `projects/${project_id}`)
+      : '';
+    if (mainImagePath) uploadedPaths.push(mainImagePath);
+
+    const slider1 = await uploadImageFiles(req.files?.slider1, `projects/${project_id}`);
+    const slider2 = await uploadImageFiles(req.files?.slider2, `projects/${project_id}`);
+    const column1 = await uploadImageFiles(req.files?.column1, `projects/${project_id}`);
+    const column2 = await uploadImageFiles(req.files?.column2, `projects/${project_id}`);
+    uploadedPaths.push(...slider1, ...slider2, ...column1, ...column2);
+
+    const newProject = {
+      project_id,
+      title,
+      summaryTitle,
+      projectDescription,
+      question,
+      answer,
+      summary,
+      meta: JSON.parse(meta),
+      category: JSON.parse(category),
+      tags: JSON.parse(tags),
+      mainImage: mainImagePath,
+      images: {
+        slider1,
+        slider2,
+        column1,
+        column2,
+      },
+    };
+
     const project = await dataStore.upsertProject(newProject);
     res.status(201).json({ message: 'Project added successfully', project });
   } catch (error) {
+    await removeImages(uploadedPaths);
     console.error('Error adding project:', error);
     res.status(500).json({ error: 'Failed to add project' });
   }
@@ -460,13 +437,14 @@ app.put("/projects/:project_id", verifyToken, upload, async (req, res) => {
   const retained = retainedImages ? JSON.parse(retainedImages) : {};
 
   const removed = {};
+  const imagesToRemove = [];
 
   for (const group of ['slider1', 'slider2', 'column1', 'column2']) {
     const prevGroup = oldImages[group] || [];
     const keepGroup = retained[group] || [];
     removed[group] = prevGroup.filter(img => !keepGroup.includes(img));
 
-    removed[group].forEach((imgPath) => {
+    for (const imgPath of removed[group]) {
       // Check if this image is still used in any group of the same project
       const stillUsedInSameProject = Object.entries(oldImages).some(([g, images]) => {
         if (g === group) return false; // skip the current group being updated
@@ -474,73 +452,67 @@ app.put("/projects/:project_id", verifyToken, upload, async (req, res) => {
       });
     
       if (!stillUsedInSameProject) {
-        removeBackendImage(imgPath);
-      }
-    });
-  }
-
-  function filterNewFiles(projectId, files = []) {
-    const resultPaths = [];
-  
-    for (const file of files) {
-      const destPath = path.join(__dirname, 'images/projects', projectId, file.originalname);
-      if (fs.existsSync(destPath)) {
-        // File already exists with same name, reference its existing path
-        resultPaths.push(`/images/projects/${projectId}/${file.originalname}`);
-        // Remove newly uploaded duplicate
-        fs.unlinkSync(file.path);
-      } else {
-        // Rename current random-named upload to its original name
-        const newFilePath = path.join(__dirname, 'images/projects', projectId, file.originalname);
-        fs.renameSync(file.path, newFilePath);
-        resultPaths.push(`/images/projects/${projectId}/${file.originalname}`);
+        imagesToRemove.push(imgPath);
       }
     }
-  
-    return resultPaths;
   }
+
+  const uploadedPaths = [];
   
-  const newImages = {
-    slider1: [...(retained.slider1 || []), ...filterNewFiles(currentProjectId, req.files?.slider1)],
-    slider2: [...(retained.slider2 || []), ...filterNewFiles(currentProjectId, req.files?.slider2)],
-    column1: [...(retained.column1 || []), ...filterNewFiles(currentProjectId, req.files?.column1)],
-    column2: [...(retained.column2 || []), ...filterNewFiles(currentProjectId, req.files?.column2)],
-  };
-
-  // Handle mainImage upload
-  const mainImageFile = req.files?.mainImage?.[0];
-let newMainImage = currentProject.mainImage;
-
-if (mainImageFile) {
-  removeBackendImage(currentProject.mainImage);
-
-  // Set new image path
-  newMainImage = `/images/projects/${currentProjectId}/${mainImageFile.filename}`;
-} else if (retainedMainImage === '' && currentProject.mainImage) {
-  removeBackendImage(currentProject.mainImage);
-  newMainImage = '';
-}
-
-  const nextProject = {
-    ...currentProject,
-    project_id: nextProjectId,
-    title,
-    summaryTitle,
-    projectDescription,
-    question,
-    answer,
-    summary,
-    meta: meta ? JSON.parse(meta) : currentProject.meta,
-    category: category ? JSON.parse(category) : currentProject.category,
-    tags: tags ? JSON.parse(tags) : currentProject.tags,
-    images: newImages,
-    mainImage: newMainImage,
-  };
-
   try {
+    const uploadedImages = {
+      slider1: await uploadImageFiles(req.files?.slider1, `projects/${nextProjectId}`),
+      slider2: await uploadImageFiles(req.files?.slider2, `projects/${nextProjectId}`),
+      column1: await uploadImageFiles(req.files?.column1, `projects/${nextProjectId}`),
+      column2: await uploadImageFiles(req.files?.column2, `projects/${nextProjectId}`),
+    };
+    uploadedPaths.push(
+      ...uploadedImages.slider1,
+      ...uploadedImages.slider2,
+      ...uploadedImages.column1,
+      ...uploadedImages.column2
+    );
+
+    const newImages = {
+      slider1: [...(retained.slider1 || []), ...uploadedImages.slider1],
+      slider2: [...(retained.slider2 || []), ...uploadedImages.slider2],
+      column1: [...(retained.column1 || []), ...uploadedImages.column1],
+      column2: [...(retained.column2 || []), ...uploadedImages.column2],
+    };
+
+    const mainImageFile = req.files?.mainImage?.[0];
+    let newMainImage = currentProject.mainImage;
+
+    if (mainImageFile) {
+      newMainImage = await uploadImageFile(mainImageFile, `projects/${nextProjectId}`);
+      uploadedPaths.push(newMainImage);
+      if (currentProject.mainImage) imagesToRemove.push(currentProject.mainImage);
+    } else if (retainedMainImage === '' && currentProject.mainImage) {
+      imagesToRemove.push(currentProject.mainImage);
+      newMainImage = '';
+    }
+
+    const nextProject = {
+      ...currentProject,
+      project_id: nextProjectId,
+      title,
+      summaryTitle,
+      projectDescription,
+      question,
+      answer,
+      summary,
+      meta: meta ? JSON.parse(meta) : currentProject.meta,
+      category: category ? JSON.parse(category) : currentProject.category,
+      tags: tags ? JSON.parse(tags) : currentProject.tags,
+      images: newImages,
+      mainImage: newMainImage,
+    };
+
     const project = await dataStore.updateProject(currentProjectId, nextProject);
+    await removeImages(imagesToRemove);
     res.json({ message: 'Project updated successfully', project });
   } catch (error) {
+    await removeImages(uploadedPaths);
     console.error('Error updating project:', error);
     res.status(500).json({ error: 'Failed to update project' });
   }
@@ -553,7 +525,7 @@ app.delete("/projects/:project_id", verifyToken, async (req, res) => {
   const deletedProject = await dataStore.deleteProject(project_id);
   if (!deletedProject) return res.status(404).json({ error: 'Project not found' });
 
-  removeProjectFiles(deletedProject);
+  await removeProjectFiles(deletedProject);
 
   res.json({ message: 'Project deleted successfully', deleted: deletedProject });
 });
@@ -591,12 +563,12 @@ app.post('/site-content/image', verifyToken, siteContentUpload.single('image'), 
   }
 
   try {
-    const nextImagePath = `/images/site-content/uploads/${req.file.filename}`;
+    const nextImagePath = await uploadImageFile(req.file, 'site-content/uploads');
     const currentContent = await dataStore.getSiteContent(defaultSiteContent);
     const previousImagePath = currentContent.images?.[key];
     const content = await dataStore.updateSiteImage(key, nextImagePath, defaultSiteContent);
     if (previousImagePath !== nextImagePath && isUploadedSiteContentImage(previousImagePath)) {
-      removeBackendImage(previousImagePath);
+      await removeImage(previousImagePath);
     }
     res.json({ message: 'Image updated successfully', image: nextImagePath, content });
   } catch (error) {
@@ -707,17 +679,18 @@ app.post('/team', verifyToken, teamUpload.single('image'), handleMulterError, as
   const nextPosition = String(position || '').trim();
 
   if (!nextName || !nextPosition) {
-    if (req.file) removeBackendImage(`/images/team/${req.file.filename}`);
     return res.status(400).json({ error: 'Name and position are required' });
   }
 
+  let uploadedImage = '';
   try {
     const members = await dataStore.getTeamMembers();
+    uploadedImage = req.file ? await uploadImageFile(req.file, 'team') : '';
     const member = {
       id: slugify(nextName) || `member-${Date.now()}`,
       name: nextName,
       position: nextPosition,
-      image: req.file ? `/images/team/${req.file.filename}` : '',
+      image: uploadedImage,
       order: Number.isFinite(Number(order)) ? Number(order) : members.length,
     };
 
@@ -729,6 +702,7 @@ app.post('/team', verifyToken, teamUpload.single('image'), handleMulterError, as
     const nextMembers = await dataStore.getTeamMembers();
     res.status(201).json({ message: 'Team member added successfully', member: created, members: nextMembers });
   } catch (error) {
+    await removeImage(uploadedImage);
     console.error('Error adding team member:', error);
     res.status(500).json({ error: 'Failed to add team member' });
   }
@@ -757,23 +731,19 @@ app.put('/team/:id', verifyToken, teamUpload.single('image'), handleMulterError,
   const nextPosition = String(position || '').trim();
 
   if (!nextName || !nextPosition) {
-    if (req.file) removeBackendImage(`/images/team/${req.file.filename}`);
     return res.status(400).json({ error: 'Name and position are required' });
   }
 
+  let uploadedImage = '';
   try {
     const members = await dataStore.getTeamMembers();
     const current = members.find(member => member.id === id);
     if (!current) {
-      if (req.file) removeBackendImage(`/images/team/${req.file.filename}`);
       return res.status(404).json({ error: 'Team member not found' });
     }
 
-    const nextImage = req.file ? `/images/team/${req.file.filename}` : current.image;
-
-    if (req.file && current.image && current.image !== nextImage) {
-      removeBackendImage(current.image);
-    }
+    uploadedImage = req.file ? await uploadImageFile(req.file, 'team') : '';
+    const nextImage = uploadedImage || current.image;
 
     const member = await dataStore.updateTeamMember(id, {
       ...current,
@@ -784,8 +754,12 @@ app.put('/team/:id', verifyToken, teamUpload.single('image'), handleMulterError,
     });
 
     const nextMembers = await dataStore.getTeamMembers();
+    if (uploadedImage && current.image && current.image !== nextImage) {
+      await removeImage(current.image);
+    }
     res.json({ message: 'Team member updated successfully', member, members: nextMembers });
   } catch (error) {
+    await removeImage(uploadedImage);
     console.error('Error updating team member:', error);
     res.status(500).json({ error: 'Failed to update team member' });
   }
@@ -798,7 +772,7 @@ app.delete('/team/:id', verifyToken, async (req, res) => {
     const deleted = await dataStore.deleteTeamMember(id);
     if (!deleted) return res.status(404).json({ error: 'Team member not found' });
 
-    removeBackendImage(deleted.image);
+    await removeImage(deleted.image);
     const members = await dataStore.getTeamMembers();
     res.json({ message: 'Team member deleted successfully', deleted, members });
   } catch (error) {
@@ -822,19 +796,19 @@ app.post('/clients', verifyToken, clientUpload, handleMulterError, async (req, r
   const nextName = String(name || '').trim();
 
   if (!nextName) {
-    if (req.files?.bwImage?.[0]) removeBackendImage(`/images/clients/${req.files.bwImage[0].filename}`);
-    if (req.files?.colorImage?.[0]) removeBackendImage(`/images/clients/${req.files.colorImage[0].filename}`);
     return res.status(400).json({ error: 'Client name is required' });
   }
 
+  const uploadedImages = [];
   try {
     const clients = await dataStore.getClients();
     const bwImage = req.files?.bwImage?.[0]
-      ? `/images/clients/${req.files.bwImage[0].filename}`
+      ? await uploadImageFile(req.files.bwImage[0], 'clients')
       : '';
     const colorImage = req.files?.colorImage?.[0]
-      ? `/images/clients/${req.files.colorImage[0].filename}`
+      ? await uploadImageFile(req.files.colorImage[0], 'clients')
       : '';
+    uploadedImages.push(bwImage, colorImage);
     const client = {
       id: slugify(nextName) || `client-${Date.now()}`,
       name: nextName,
@@ -852,6 +826,7 @@ app.post('/clients', verifyToken, clientUpload, handleMulterError, async (req, r
     const nextClients = await dataStore.getClients();
     res.status(201).json({ message: 'Client added successfully', client: created, clients: nextClients });
   } catch (error) {
+    await removeImages(uploadedImages);
     console.error('Error adding client:', error);
     res.status(500).json({ error: 'Failed to add client' });
   }
@@ -879,34 +854,27 @@ app.put('/clients/:id', verifyToken, clientUpload, handleMulterError, async (req
   const nextName = String(name || '').trim();
 
   if (!nextName) {
-    if (req.files?.bwImage?.[0]) removeBackendImage(`/images/clients/${req.files.bwImage[0].filename}`);
-    if (req.files?.colorImage?.[0]) removeBackendImage(`/images/clients/${req.files.colorImage[0].filename}`);
     return res.status(400).json({ error: 'Client name is required' });
   }
 
+  const uploadedImages = [];
   try {
     const clients = await dataStore.getClients();
     const current = clients.find(client => client.id === id);
     if (!current) {
-      if (req.files?.bwImage?.[0]) removeBackendImage(`/images/clients/${req.files.bwImage[0].filename}`);
-      if (req.files?.colorImage?.[0]) removeBackendImage(`/images/clients/${req.files.colorImage[0].filename}`);
       return res.status(404).json({ error: 'Client not found' });
     }
 
     const nextBwImage = req.files?.bwImage?.[0]
-      ? `/images/clients/${req.files.bwImage[0].filename}`
+      ? await uploadImageFile(req.files.bwImage[0], 'clients')
       : current.bwImage;
     const nextColorImage = req.files?.colorImage?.[0]
-      ? `/images/clients/${req.files.colorImage[0].filename}`
+      ? await uploadImageFile(req.files.colorImage[0], 'clients')
       : current.colorImage;
-
-    if (req.files?.bwImage?.[0] && current.bwImage && current.bwImage !== nextBwImage) {
-      removeBackendImage(current.bwImage);
-    }
-
-    if (req.files?.colorImage?.[0] && current.colorImage && current.colorImage !== nextColorImage) {
-      removeBackendImage(current.colorImage);
-    }
+    uploadedImages.push(
+      req.files?.bwImage?.[0] ? nextBwImage : '',
+      req.files?.colorImage?.[0] ? nextColorImage : ''
+    );
 
     const client = await dataStore.updateClientRecord(id, {
       ...current,
@@ -918,8 +886,16 @@ app.put('/clients/:id', verifyToken, clientUpload, handleMulterError, async (req
     });
 
     const nextClients = await dataStore.getClients();
+    if (req.files?.bwImage?.[0] && current.bwImage && current.bwImage !== nextBwImage) {
+      await removeImage(current.bwImage);
+    }
+
+    if (req.files?.colorImage?.[0] && current.colorImage && current.colorImage !== nextColorImage) {
+      await removeImage(current.colorImage);
+    }
     res.json({ message: 'Client updated successfully', client, clients: nextClients });
   } catch (error) {
+    await removeImages(uploadedImages);
     console.error('Error updating client:', error);
     res.status(500).json({ error: 'Failed to update client' });
   }
@@ -932,8 +908,7 @@ app.delete('/clients/:id', verifyToken, async (req, res) => {
     const deleted = await dataStore.deleteClientRecord(id);
     if (!deleted) return res.status(404).json({ error: 'Client not found' });
 
-    removeBackendImage(deleted.bwImage);
-    removeBackendImage(deleted.colorImage);
+    await removeImages([deleted.bwImage, deleted.colorImage]);
     const clients = await dataStore.getClients();
     res.json({ message: 'Client deleted successfully', deleted, clients });
   } catch (error) {
