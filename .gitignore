@@ -13,6 +13,9 @@ coverage/
 # API media assets
 api.wysiwyg.co.in/images/
 
+# Separate frontend repository
+beta.wysiwyg.co.in/
+
 # Environment and local config
 .env
 .env.*
