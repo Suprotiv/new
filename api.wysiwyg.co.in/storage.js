@@ -4,7 +4,6 @@ const path = require('path');
 const sharp = require('sharp');
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR || '/home/u148414751/uploads';
-const LEGACY_IMAGES_ROOT = path.join(__dirname, 'images');
 
 class UploadStorageError extends Error {
   constructor(message, cause) {
@@ -64,10 +63,6 @@ function localPathFromPublicPath(value) {
   const uploadRelativePath = getUploadRelativePath(value);
   if (uploadRelativePath) {
     return resolveInside(UPLOAD_DIR, uploadRelativePath);
-  }
-
-  if (typeof value === 'string' && value.startsWith('/images/')) {
-    return resolveInside(LEGACY_IMAGES_ROOT, value.replace(/^\/images\/?/, ''));
   }
 
   return '';
@@ -167,7 +162,6 @@ function removeUploadFolder(...parts) {
 }
 
 module.exports = {
-  LEGACY_IMAGES_ROOT,
   UPLOAD_DIR,
   UploadStorageError,
   convertImageToWebp,

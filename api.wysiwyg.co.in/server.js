@@ -7,7 +7,6 @@ const axios = require("axios");
 const nodemailer = require("nodemailer");
 const dataStore = require('./dataStore');
 const {
-  LEGACY_IMAGES_ROOT,
   UPLOAD_DIR,
   UploadStorageError,
   ensureUploadDirectory,
@@ -30,7 +29,6 @@ app.use(cors());
 app.use(express.json());
 ensureUploadDirectory();
 app.use('/uploads', express.static(UPLOAD_DIR));
-app.use('/images', express.static(LEGACY_IMAGES_ROOT));
 
 
 const JWT_SECRET = process.env.JWT_SECRET || "new_keyssqww";
@@ -172,9 +170,7 @@ async function removeProjectFiles(project) {
 function isUploadedSiteContentImage(imagePath) {
   return Boolean(
     imagePath &&
-      (imagePath.startsWith('/uploads/site-content/uploads/') ||
-        imagePath.startsWith('/images/site-content/uploads/') ||
-        imagePath.includes('/storage/v1/object/public/'))
+      imagePath.startsWith('/uploads/site-content/uploads/')
   );
 }
 
