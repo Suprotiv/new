@@ -8,6 +8,7 @@
     "migrate:images": "node scripts/migrate-images-to-supabase-storage.js",
     "migrate:supabase": "node scripts/migrate-json-to-supabase.js",
     "rollback:supabase-images": "node scripts/rollback-supabase-image-urls-to-uploads.js",
+    "normalize:upload-paths": "node scripts/normalize-upload-paths.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

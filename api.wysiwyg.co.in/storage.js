@@ -150,6 +150,33 @@ async function removeStorageImages(values = []) {
   }
 }
 
+async function relocateStorageImage(value, folder = '') {
+  const sourcePath = localPathFromPublicPath(value);
+  if (!sourcePath || !fs.existsSync(sourcePath)) return value;
+
+  const targetFolder = resolveInside(UPLOAD_DIR, folder);
+  if (!targetFolder) throw new UploadStorageError('Invalid destination folder');
+
+  try {
+    await fs.promises.mkdir(targetFolder, { recursive: true });
+    const filename = `${Date.now()}-${crypto.randomUUID()}-${safeFileName(path.basename(sourcePath))}`;
+    const targetPath = path.join(targetFolder, filename);
+
+    try {
+      await fs.promises.rename(sourcePath, targetPath);
+    } catch (error) {
+      if (error.code !== 'EXDEV') throw error;
+      await fs.promises.copyFile(sourcePath, targetPath, fs.constants.COPYFILE_EXCL);
+      await fs.promises.unlink(sourcePath);
+    }
+
+    return publicUploadPath(folder, filename);
+  } catch (error) {
+    if (error instanceof UploadStorageError) throw error;
+    throw new UploadStorageError('Failed to relocate image in storage', error);
+  }
+}
+
 function removeUploadFolder(...parts) {
   const folderPath = resolveInside(UPLOAD_DIR, path.join(...parts));
   if (!folderPath || !fs.existsSync(folderPath)) return;
@@ -169,6 +196,7 @@ module.exports = {
   getUploadRelativePath,
   localPathFromPublicPath,
   publicUploadPath,
+  relocateStorageImage,
   removeStorageImage,
   removeStorageImages,
   removeUploadFolder,

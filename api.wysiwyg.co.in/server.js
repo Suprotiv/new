@@ -12,6 +12,7 @@ const {
   ensureUploadDirectory,
   getUploadRelativePath,
   publicUploadPath,
+  relocateStorageImage,
   removeStorageImage,
   removeStorageImages,
   removeUploadFolder,
@@ -50,6 +51,14 @@ const upload = multer({ storage }).fields([
 ]);
 
 const siteContentUpload = multer({ storage });
+const accoladeUpload = multer({
+  storage,
+  limits: { fileSize: TEAM_IMAGE_SIZE_LIMIT },
+  fileFilter: function (req, file, cb) {
+    if (!file.mimetype.startsWith('image/')) return cb(new Error('Only image uploads are allowed'));
+    cb(null, true);
+  },
+});
 
 const teamUpload = multer({
   storage,
@@ -174,6 +183,31 @@ function isUploadedSiteContentImage(imagePath) {
   );
 }
 
+function isManagedAccoladeImage(imagePath) {
+  return Boolean(
+    imagePath &&
+      (imagePath.startsWith('/uploads/accolades/') ||
+        imagePath.startsWith('/uploads/site-content/uploads/'))
+  );
+}
+
+async function relocateAccoladeImages(items) {
+  let changed = false;
+  const relocated = [];
+
+  for (const item of items) {
+    if (item.image?.startsWith('/uploads/') && !item.image.startsWith('/uploads/accolades/')) {
+      const image = await relocateStorageImage(item.image, 'accolades');
+      changed = changed || image !== item.image;
+      relocated.push({ ...item, image });
+    } else {
+      relocated.push(item);
+    }
+  }
+
+  return { items: relocated, changed };
+}
+
 const defaultSiteContent = {
   text: {
     "home.hero.title.line1": "We don’t",
@@ -246,6 +280,54 @@ const defaultSiteContent = {
     "home.prefooter.image": publicUploadPath("site-content/default/pre-footer.png"),
   },
 };
+
+function getLegacyAccolades(content = defaultSiteContent) {
+  return [1, 2, 3, 4].map(index => ({
+    id: String(index),
+    category: content.text?.[`home.accolades.${index}.category`] || '',
+    award: content.text?.[`home.accolades.${index}.award`] || '',
+    project: content.text?.[`home.accolades.${index}.project`] || '',
+    description: content.text?.[`home.accolades.${index}.description`] || '',
+    image: content.images?.[`home.accolades.${index}.image`] || '',
+  }));
+}
+
+function parseAccolades(content) {
+  try {
+    const saved = content.text?.['home.accolades.items'];
+    if (typeof saved !== 'string') return getLegacyAccolades(content);
+    const items = JSON.parse(saved);
+    return Array.isArray(items) ? items : getLegacyAccolades(content);
+  } catch (_) {
+    return getLegacyAccolades(content);
+  }
+}
+
+async function saveAccolades(items) {
+  return dataStore.updateSiteText('home.accolades.items', JSON.stringify(items), defaultSiteContent);
+}
+
+let accoladeMigrationPromise = null;
+
+async function getMigratedAccolades() {
+  if (!accoladeMigrationPromise) {
+    accoladeMigrationPromise = (async () => {
+      const content = await dataStore.getSiteContent(defaultSiteContent);
+      const currentItems = parseAccolades(content);
+      const { items, changed } = await relocateAccoladeImages(currentItems);
+
+      if (changed || typeof content.text?.['home.accolades.items'] !== 'string') {
+        await saveAccolades(items);
+      }
+
+      return { content, items };
+    })().finally(() => {
+      accoladeMigrationPromise = null;
+    });
+  }
+
+  return accoladeMigrationPromise;
+}
 
 // Helper function to build file paths
 
@@ -572,6 +654,88 @@ app.post('/site-content/image', verifyToken, siteContentUpload.single('image'), 
     res.json({ message: 'Image updated successfully', image: nextImagePath, content });
   } catch (error) {
     return sendUploadStorageError(error, res, 'Failed to update site image');
+  }
+});
+
+app.get('/accolades', async (req, res) => {
+  try {
+    const { content, items } = await getMigratedAccolades();
+    res.json({ heading: content.text?.['home.accolades.heading'] || 'accolades', items });
+  } catch (error) {
+    console.error('Error reading accolades:', error);
+    res.status(500).json({ error: 'Failed to read accolades' });
+  }
+});
+
+app.post('/accolades', verifyToken, accoladeUpload.single('image'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'An image is required' });
+  let imagePath;
+  try {
+    imagePath = await uploadImageFile(req.file, 'accolades');
+    const content = await dataStore.getSiteContent(defaultSiteContent);
+    const items = parseAccolades(content);
+    const item = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      category: String(req.body.category || '').trim(),
+      award: String(req.body.award || '').trim(),
+      project: String(req.body.project || '').trim(),
+      description: String(req.body.description || '').trim(),
+      image: imagePath,
+    };
+    if (!item.category || !item.award || !item.project || !item.description) {
+      await removeImage(imagePath);
+      return res.status(400).json({ error: 'All text fields are required' });
+    }
+    await saveAccolades([...items, item]);
+    res.status(201).json({ item });
+  } catch (error) {
+    if (imagePath) await removeImage(imagePath);
+    return sendUploadStorageError(error, res, 'Failed to create accolade');
+  }
+});
+
+app.put('/accolades/:id', verifyToken, accoladeUpload.single('image'), async (req, res) => {
+  let uploadedPath;
+  try {
+    const content = await dataStore.getSiteContent(defaultSiteContent);
+    const items = parseAccolades(content);
+    const index = items.findIndex(item => String(item.id) === req.params.id);
+    if (index < 0) return res.status(404).json({ error: 'Accolade not found' });
+    if (req.file) uploadedPath = await uploadImageFile(req.file, 'accolades');
+    const previous = items[index];
+    const next = {
+      ...previous,
+      category: String(req.body.category || '').trim(),
+      award: String(req.body.award || '').trim(),
+      project: String(req.body.project || '').trim(),
+      description: String(req.body.description || '').trim(),
+      image: uploadedPath || previous.image,
+    };
+    if (!next.category || !next.award || !next.project || !next.description) {
+      if (uploadedPath) await removeImage(uploadedPath);
+      return res.status(400).json({ error: 'All text fields are required' });
+    }
+    items[index] = next;
+    await saveAccolades(items);
+    if (uploadedPath && isManagedAccoladeImage(previous.image)) await removeImage(previous.image);
+    res.json({ item: next });
+  } catch (error) {
+    if (uploadedPath) await removeImage(uploadedPath);
+    return sendUploadStorageError(error, res, 'Failed to update accolade');
+  }
+});
+
+app.delete('/accolades/:id', verifyToken, async (req, res) => {
+  try {
+    const content = await dataStore.getSiteContent(defaultSiteContent);
+    const items = parseAccolades(content);
+    const item = items.find(entry => String(entry.id) === req.params.id);
+    if (!item) return res.status(404).json({ error: 'Accolade not found' });
+    await saveAccolades(items.filter(entry => String(entry.id) !== req.params.id));
+    if (isManagedAccoladeImage(item.image)) await removeImage(item.image);
+    res.json({ message: 'Accolade deleted' });
+  } catch (error) {
+    return sendUploadStorageError(error, res, 'Failed to delete accolade');
   }
 });
 
