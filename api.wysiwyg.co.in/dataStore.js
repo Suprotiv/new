@@ -89,6 +89,30 @@ function clientToRow(client) {
   };
 }
 
+function accoladeFromRow(row) {
+  return {
+    id: row.id,
+    category: row.category,
+    award: row.award,
+    project: row.project,
+    description: row.description,
+    image: row.image || '',
+    order: row.display_order || 0,
+  };
+}
+
+function accoladeToRow(accolade) {
+  return {
+    id: accolade.id,
+    category: accolade.category,
+    award: accolade.award,
+    project: accolade.project,
+    description: accolade.description,
+    image: accolade.image || '',
+    display_order: Number.isFinite(Number(accolade.order)) ? Number(accolade.order) : 0,
+  };
+}
+
 function throwIfError(error) {
   if (error) throw error;
 }
@@ -325,6 +349,47 @@ async function reorderClients(ids) {
   return getClients();
 }
 
+async function getAccolades() {
+  const { data, error } = await getSupabase()
+    .from('accolades')
+    .select('*')
+    .order('display_order', { ascending: true });
+  throwIfError(error);
+  return (data || []).map(accoladeFromRow);
+}
+
+async function createAccolade(accolade) {
+  const { data, error } = await getSupabase()
+    .from('accolades')
+    .insert(accoladeToRow(accolade))
+    .select()
+    .single();
+  throwIfError(error);
+  return accoladeFromRow(data);
+}
+
+async function updateAccolade(id, accolade) {
+  const { data, error } = await getSupabase()
+    .from('accolades')
+    .update(accoladeToRow({ ...accolade, id }))
+    .eq('id', id)
+    .select()
+    .single();
+  throwIfError(error);
+  return accoladeFromRow(data);
+}
+
+async function deleteAccolade(id) {
+  const { data, error } = await getSupabase()
+    .from('accolades')
+    .delete()
+    .eq('id', id)
+    .select()
+    .maybeSingle();
+  throwIfError(error);
+  return data ? accoladeFromRow(data) : null;
+}
+
 async function getSiteContent(defaultSiteContent) {
   const { data, error } = await getSupabase()
     .from('site_content')
@@ -361,14 +426,17 @@ async function updateSiteImage(key, value, defaultSiteContent) {
 }
 
 module.exports = {
+  createAccolade,
   createCategory,
   createClientRecord,
   createTeamMember,
+  deleteAccolade,
   deleteCategory,
   deleteClientRecord,
   deleteProject,
   deleteTeamMember,
   getCategories,
+  getAccolades,
   getCategory,
   getClients,
   getProject,
@@ -378,6 +446,7 @@ module.exports = {
   reorderClients,
   reorderTeamMembers,
   updateCategory,
+  updateAccolade,
   updateClientRecord,
   updateProject,
   updateSiteImage,

@@ -246,23 +246,6 @@ const defaultSiteContent = {
     "home.stats.4.value": "200",
     "home.stats.4.label": "Leads generated",
     "home.stats.4.subLabel": "Helping clients grow their reach — one lead at a time.",
-    "home.accolades.heading": "accolades",
-    "home.accolades.1.category": "Best real estate construction",
-    "home.accolades.1.award": "eLets India Brand Summit & Awards 2024",
-    "home.accolades.1.project": "Ambuja Utalika",
-    "home.accolades.1.description": "A unanimous jury decision for the best launch campaign for ‘Utalika—Let this world be yours’.",
-    "home.accolades.2.category": "Best fashion brochure",
-    "home.accolades.2.award": "Brochure Design that Works",
-    "home.accolades.2.project": "Ventures Fashion",
-    "home.accolades.2.description": "A compilation by Lisa L Cyr of some of the best brochures in the graphic design industry. It showcases the various textures and patterns in an interesting, tasteful way.",
-    "home.accolades.3.category": "Best newsletter",
-    "home.accolades.3.award": "2012–13",
-    "home.accolades.3.project": "Rotary Club of Calcutta",
-    "home.accolades.3.description": "Our exacting standards of copy, design and artwork were applied to create a finished product, month-after-month, that reflects the esteem and prestige of the Rotary Club.",
-    "home.accolades.4.category": "Showcase",
-    "home.accolades.4.award": "ITC Gold Flake, IFB Home Appliances and Mahadevi Birla World Academy",
-    "home.accolades.4.project": "Kyoorius",
-    "home.accolades.4.description": "Kyoorius is a design magazine that publishes an annual compilation of the best design work in India.",
     "home.prefooter.copy": "Creativity isn’t clean. It’s messy,\nunpredictable and beautifully chaotic.\nThat’s where the magic happens— and\nwhere the best stories are born.",
   },
   images: {
@@ -273,61 +256,9 @@ const defaultSiteContent = {
     "home.work.panel1.image": publicUploadPath("site-content/default/work-SnoBite.jpg"),
     "home.work.panel2.image": publicUploadPath("site-content/default/work-ITC-Hotel.jpg"),
     "home.work.panel3.image": publicUploadPath("site-content/default/work-VION.jpg"),
-    "home.accolades.1.image": publicUploadPath("site-content/default/accolades-AMBUJA-UTALIKA.png"),
-    "home.accolades.2.image": publicUploadPath("site-content/default/accolades-VENTURES-FASHION.png"),
-    "home.accolades.3.image": publicUploadPath("site-content/default/accolades-ROTARY-CLUB-OF-CALCUTTA.png"),
-    "home.accolades.4.image": publicUploadPath("site-content/default/accolades-KYOORIUS.png"),
     "home.prefooter.image": publicUploadPath("site-content/default/pre-footer.png"),
   },
 };
-
-function getLegacyAccolades(content = defaultSiteContent) {
-  return [1, 2, 3, 4].map(index => ({
-    id: String(index),
-    category: content.text?.[`home.accolades.${index}.category`] || '',
-    award: content.text?.[`home.accolades.${index}.award`] || '',
-    project: content.text?.[`home.accolades.${index}.project`] || '',
-    description: content.text?.[`home.accolades.${index}.description`] || '',
-    image: content.images?.[`home.accolades.${index}.image`] || '',
-  }));
-}
-
-function parseAccolades(content) {
-  try {
-    const saved = content.text?.['home.accolades.items'];
-    if (typeof saved !== 'string') return getLegacyAccolades(content);
-    const items = JSON.parse(saved);
-    return Array.isArray(items) ? items : getLegacyAccolades(content);
-  } catch (_) {
-    return getLegacyAccolades(content);
-  }
-}
-
-async function saveAccolades(items) {
-  return dataStore.updateSiteText('home.accolades.items', JSON.stringify(items), defaultSiteContent);
-}
-
-let accoladeMigrationPromise = null;
-
-async function getMigratedAccolades() {
-  if (!accoladeMigrationPromise) {
-    accoladeMigrationPromise = (async () => {
-      const content = await dataStore.getSiteContent(defaultSiteContent);
-      const currentItems = parseAccolades(content);
-      const { items, changed } = await relocateAccoladeImages(currentItems);
-
-      if (changed || typeof content.text?.['home.accolades.items'] !== 'string') {
-        await saveAccolades(items);
-      }
-
-      return { content, items };
-    })().finally(() => {
-      accoladeMigrationPromise = null;
-    });
-  }
-
-  return accoladeMigrationPromise;
-}
 
 // Helper function to build file paths
 
@@ -659,8 +590,12 @@ app.post('/site-content/image', verifyToken, siteContentUpload.single('image'), 
 
 app.get('/accolades', async (req, res) => {
   try {
-    const { content, items } = await getMigratedAccolades();
-    res.json({ heading: content.text?.['home.accolades.heading'] || 'accolades', items });
+    const currentItems = await dataStore.getAccolades();
+    const { items, changed } = await relocateAccoladeImages(currentItems);
+    if (changed) {
+      await Promise.all(items.map(item => dataStore.updateAccolade(item.id, item)));
+    }
+    res.json({ items });
   } catch (error) {
     console.error('Error reading accolades:', error);
     res.status(500).json({ error: 'Failed to read accolades' });
@@ -672,8 +607,7 @@ app.post('/accolades', verifyToken, accoladeUpload.single('image'), async (req, 
   let imagePath;
   try {
     imagePath = await uploadImageFile(req.file, 'accolades');
-    const content = await dataStore.getSiteContent(defaultSiteContent);
-    const items = parseAccolades(content);
+    const items = await dataStore.getAccolades();
     const item = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       category: String(req.body.category || '').trim(),
@@ -681,13 +615,14 @@ app.post('/accolades', verifyToken, accoladeUpload.single('image'), async (req, 
       project: String(req.body.project || '').trim(),
       description: String(req.body.description || '').trim(),
       image: imagePath,
+      order: items.length,
     };
     if (!item.category || !item.award || !item.project || !item.description) {
       await removeImage(imagePath);
       return res.status(400).json({ error: 'All text fields are required' });
     }
-    await saveAccolades([...items, item]);
-    res.status(201).json({ item });
+    const created = await dataStore.createAccolade(item);
+    res.status(201).json({ item: created });
   } catch (error) {
     if (imagePath) await removeImage(imagePath);
     return sendUploadStorageError(error, res, 'Failed to create accolade');
@@ -697,12 +632,10 @@ app.post('/accolades', verifyToken, accoladeUpload.single('image'), async (req, 
 app.put('/accolades/:id', verifyToken, accoladeUpload.single('image'), async (req, res) => {
   let uploadedPath;
   try {
-    const content = await dataStore.getSiteContent(defaultSiteContent);
-    const items = parseAccolades(content);
-    const index = items.findIndex(item => String(item.id) === req.params.id);
-    if (index < 0) return res.status(404).json({ error: 'Accolade not found' });
+    const items = await dataStore.getAccolades();
+    const previous = items.find(item => String(item.id) === req.params.id);
+    if (!previous) return res.status(404).json({ error: 'Accolade not found' });
     if (req.file) uploadedPath = await uploadImageFile(req.file, 'accolades');
-    const previous = items[index];
     const next = {
       ...previous,
       category: String(req.body.category || '').trim(),
@@ -715,10 +648,9 @@ app.put('/accolades/:id', verifyToken, accoladeUpload.single('image'), async (re
       if (uploadedPath) await removeImage(uploadedPath);
       return res.status(400).json({ error: 'All text fields are required' });
     }
-    items[index] = next;
-    await saveAccolades(items);
+    const updated = await dataStore.updateAccolade(req.params.id, next);
     if (uploadedPath && isManagedAccoladeImage(previous.image)) await removeImage(previous.image);
-    res.json({ item: next });
+    res.json({ item: updated });
   } catch (error) {
     if (uploadedPath) await removeImage(uploadedPath);
     return sendUploadStorageError(error, res, 'Failed to update accolade');
@@ -727,11 +659,8 @@ app.put('/accolades/:id', verifyToken, accoladeUpload.single('image'), async (re
 
 app.delete('/accolades/:id', verifyToken, async (req, res) => {
   try {
-    const content = await dataStore.getSiteContent(defaultSiteContent);
-    const items = parseAccolades(content);
-    const item = items.find(entry => String(entry.id) === req.params.id);
+    const item = await dataStore.deleteAccolade(req.params.id);
     if (!item) return res.status(404).json({ error: 'Accolade not found' });
-    await saveAccolades(items.filter(entry => String(entry.id) !== req.params.id));
     if (isManagedAccoladeImage(item.image)) await removeImage(item.image);
     res.json({ message: 'Accolade deleted' });
   } catch (error) {
