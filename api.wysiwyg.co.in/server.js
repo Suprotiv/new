@@ -51,6 +51,14 @@ const upload = multer({ storage }).fields([
 ]);
 
 const siteContentUpload = multer({ storage });
+const homeHeroUpload = multer({
+  storage,
+  limits: { fileSize: TEAM_IMAGE_SIZE_LIMIT },
+  fileFilter: function (req, file, cb) {
+    if (!file.mimetype.startsWith('image/')) return cb(new Error('Only image uploads are allowed'));
+    cb(null, true);
+  },
+});
 const accoladeUpload = multer({
   storage,
   limits: { fileSize: TEAM_IMAGE_SIZE_LIMIT },
@@ -208,6 +216,23 @@ async function relocateAccoladeImages(items) {
   return { items: relocated, changed };
 }
 
+async function relocateHomeHeroImages(items) {
+  let changed = false;
+  const relocated = [];
+
+  for (const item of items) {
+    if (item.image?.startsWith('/uploads/') && !item.image.startsWith('/uploads/home-hero/')) {
+      const image = await relocateStorageImage(item.image, 'home-hero');
+      changed = changed || image !== item.image;
+      relocated.push({ ...item, image });
+    } else {
+      relocated.push(item);
+    }
+  }
+
+  return { items: relocated, changed };
+}
+
 const defaultSiteContent = {
   text: {
     "home.hero.title.line1": "We don’t",
@@ -249,7 +274,6 @@ const defaultSiteContent = {
     "home.prefooter.copy": "Creativity isn’t clean. It’s messy,\nunpredictable and beautifully chaotic.\nThat’s where the magic happens— and\nwhere the best stories are born.",
   },
   images: {
-    "home.hero.image": publicUploadPath("site-content/default/Home-Wysiwyg.png"),
     "home.news.heroImage": publicUploadPath("site-content/default/img-News-Siddha-Serena.jpeg"),
     "home.news.bottomImage": publicUploadPath("site-content/default/img-News-Siddha-Serena-bottom.jpeg"),
     "home.featured.image": publicUploadPath("site-content/default/img-Featured-Ambuja-Neotia.jpg"),
@@ -431,6 +455,22 @@ app.get('/projects', async (req, res) => {
   }
 });
 
+// GET - Fetch one project without transferring the complete portfolio.
+app.get('/projects/:project_id', async (req, res) => {
+  try {
+    const project = await dataStore.getProject(req.params.project_id);
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+    res.json(project);
+  } catch (error) {
+    console.error('Error reading project:', error);
+    res.status(500).json({ error: 'Failed to read project' });
+  }
+});
+
 // PUT - Update existing project
 app.put("/projects/:project_id", verifyToken, upload, async (req, res) => {
   const currentProjectId = req.params.project_id;
@@ -585,6 +625,68 @@ app.post('/site-content/image', verifyToken, siteContentUpload.single('image'), 
     res.json({ message: 'Image updated successfully', image: nextImagePath, content });
   } catch (error) {
     return sendUploadStorageError(error, res, 'Failed to update site image');
+  }
+});
+
+app.get('/home-hero-images', async (req, res) => {
+  try {
+    const currentItems = await dataStore.getHomeHeroImages();
+    const { items, changed } = await relocateHomeHeroImages(currentItems);
+    if (changed) {
+      await Promise.all(items.map(item => dataStore.updateHomeHeroImage(item.id, item)));
+    }
+    res.json({ items });
+  } catch (error) {
+    console.error('Error reading home hero images:', error);
+    res.status(500).json({ error: 'Failed to read home hero images' });
+  }
+});
+
+app.post('/home-hero-images', verifyToken, homeHeroUpload.array('images', 20), async (req, res) => {
+  if (!req.files?.length) return res.status(400).json({ error: 'At least one image is required' });
+  const uploadedPaths = [];
+  try {
+    for (const file of req.files) {
+      uploadedPaths.push(await uploadImageFile(file, 'home-hero'));
+    }
+    const existing = await dataStore.getHomeHeroImages();
+    const created = await dataStore.createHomeHeroImages(
+      uploadedPaths.map((image, index) => ({ image, order: existing.length + index }))
+    );
+    res.status(201).json({ items: created });
+  } catch (error) {
+    await removeImages(uploadedPaths);
+    return sendUploadStorageError(error, res, 'Failed to upload home hero images');
+  }
+});
+
+app.put('/home-hero-images/order', verifyToken, async (req, res) => {
+  const ids = Array.isArray(req.body.ids) ? req.body.ids.map(Number).filter(Number.isFinite) : [];
+  try {
+    const existing = await dataStore.getHomeHeroImages();
+    if (ids.length !== existing.length || new Set(ids).size !== existing.length) {
+      return res.status(400).json({ error: 'The complete image order is required' });
+    }
+    const byId = new Map(existing.map(item => [Number(item.id), item]));
+    if (ids.some(id => !byId.has(id))) return res.status(400).json({ error: 'Invalid image order' });
+    await Promise.all(ids.map((id, order) => dataStore.updateHomeHeroImage(id, { ...byId.get(id), order })));
+    res.json({ items: await dataStore.getHomeHeroImages() });
+  } catch (error) {
+    console.error('Error reordering home hero images:', error);
+    res.status(500).json({ error: 'Failed to reorder home hero images' });
+  }
+});
+
+app.delete('/home-hero-images/:id', verifyToken, async (req, res) => {
+  try {
+    const item = await dataStore.deleteHomeHeroImage(req.params.id);
+    if (!item) return res.status(404).json({ error: 'Home hero image not found' });
+    await removeImage(item.image);
+    const remaining = await dataStore.getHomeHeroImages();
+    await Promise.all(remaining.map((entry, order) => dataStore.updateHomeHeroImage(entry.id, { ...entry, order })));
+    res.json({ message: 'Home hero image deleted' });
+  } catch (error) {
+    return sendUploadStorageError(error, res, 'Failed to delete home hero image');
   }
 });
 

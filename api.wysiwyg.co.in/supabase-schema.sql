@@ -51,6 +51,14 @@ create table if not exists public.site_content (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.home_hero_images (
+  id bigint generated always as identity primary key,
+  image text not null check (length(image) > 0),
+  display_order integer not null default 0 check (display_order >= 0),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create table if not exists public.accolades (
   id text primary key,
   category text not null,
@@ -98,6 +106,11 @@ create trigger set_site_content_updated_at
 before update on public.site_content
 for each row execute function public.set_updated_at();
 
+drop trigger if exists set_home_hero_images_updated_at on public.home_hero_images;
+create trigger set_home_hero_images_updated_at
+before update on public.home_hero_images
+for each row execute function public.set_updated_at();
+
 drop trigger if exists set_accolades_updated_at on public.accolades;
 create trigger set_accolades_updated_at
 before update on public.accolades
@@ -109,6 +122,7 @@ create index if not exists projects_tags_idx on public.projects using gin (tags)
 create index if not exists team_members_order_idx on public.team_members (display_order);
 create index if not exists clients_order_idx on public.clients (display_order);
 create index if not exists site_content_type_idx on public.site_content (type);
+create index if not exists home_hero_images_order_idx on public.home_hero_images (display_order, id);
 create index if not exists accolades_display_order_idx on public.accolades (display_order);
 
 alter table public.projects enable row level security;
@@ -116,4 +130,5 @@ alter table public.categories enable row level security;
 alter table public.team_members enable row level security;
 alter table public.clients enable row level security;
 alter table public.site_content enable row level security;
+alter table public.home_hero_images enable row level security;
 alter table public.accolades enable row level security;

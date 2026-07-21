@@ -39,6 +39,14 @@ function projectToRow(project) {
   };
 }
 
+function homeHeroImageFromRow(row) {
+  return {
+    id: row.id,
+    image: row.image || '',
+    order: row.display_order || 0,
+  };
+}
+
 function categoryFromRow(row) {
   return {
     name: row.name,
@@ -124,6 +132,48 @@ async function getProjects() {
     .order('title', { ascending: true });
   throwIfError(error);
   return (data || []).map(projectFromRow);
+}
+
+async function getHomeHeroImages() {
+  const { data, error } = await getSupabase()
+    .from('home_hero_images')
+    .select('*')
+    .order('display_order', { ascending: true })
+    .order('id', { ascending: true });
+  throwIfError(error);
+  return (data || []).map(homeHeroImageFromRow);
+}
+
+async function createHomeHeroImages(images) {
+  const rows = images.map(item => ({ image: item.image, display_order: item.order }));
+  const { data, error } = await getSupabase()
+    .from('home_hero_images')
+    .insert(rows)
+    .select();
+  throwIfError(error);
+  return (data || []).map(homeHeroImageFromRow);
+}
+
+async function updateHomeHeroImage(id, image) {
+  const { data, error } = await getSupabase()
+    .from('home_hero_images')
+    .update({ image: image.image, display_order: image.order })
+    .eq('id', id)
+    .select()
+    .single();
+  throwIfError(error);
+  return homeHeroImageFromRow(data);
+}
+
+async function deleteHomeHeroImage(id) {
+  const { data, error } = await getSupabase()
+    .from('home_hero_images')
+    .delete()
+    .eq('id', id)
+    .select()
+    .maybeSingle();
+  throwIfError(error);
+  return data ? homeHeroImageFromRow(data) : null;
 }
 
 async function getProject(projectId) {
@@ -426,6 +476,7 @@ async function updateSiteImage(key, value, defaultSiteContent) {
 }
 
 module.exports = {
+  createHomeHeroImages,
   createAccolade,
   createCategory,
   createClientRecord,
@@ -433,12 +484,14 @@ module.exports = {
   deleteAccolade,
   deleteCategory,
   deleteClientRecord,
+  deleteHomeHeroImage,
   deleteProject,
   deleteTeamMember,
   getCategories,
   getAccolades,
   getCategory,
   getClients,
+  getHomeHeroImages,
   getProject,
   getProjects,
   getSiteContent,
@@ -448,6 +501,7 @@ module.exports = {
   updateCategory,
   updateAccolade,
   updateClientRecord,
+  updateHomeHeroImage,
   updateProject,
   updateSiteImage,
   updateSiteText,
