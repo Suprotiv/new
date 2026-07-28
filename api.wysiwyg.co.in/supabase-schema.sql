@@ -80,6 +80,17 @@ create table if not exists public.accolades (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.testimonials (
+  id text primary key,
+  name text not null,
+  designation text not null default '',
+  quote text not null,
+  image text not null default '',
+  display_order integer not null default 0 check (display_order >= 0),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
@@ -130,6 +141,11 @@ create trigger set_accolades_updated_at
 before update on public.accolades
 for each row execute function public.set_updated_at();
 
+drop trigger if exists set_testimonials_updated_at on public.testimonials;
+create trigger set_testimonials_updated_at
+before update on public.testimonials
+for each row execute function public.set_updated_at();
+
 create index if not exists projects_title_idx on public.projects (lower(title));
 create index if not exists projects_categories_idx on public.projects using gin (categories);
 create index if not exists projects_tags_idx on public.projects using gin (tags);
@@ -139,6 +155,8 @@ create index if not exists site_content_type_idx on public.site_content (type);
 create index if not exists home_hero_images_order_idx on public.home_hero_images (display_order, id);
 create index if not exists home_projects_order_idx on public.home_projects (display_order, id);
 create index if not exists accolades_display_order_idx on public.accolades (display_order);
+create index if not exists testimonials_display_order_idx
+  on public.testimonials (display_order, created_at);
 
 alter table public.projects enable row level security;
 alter table public.categories enable row level security;
@@ -148,6 +166,7 @@ alter table public.site_content enable row level security;
 alter table public.home_hero_images enable row level security;
 alter table public.home_projects enable row level security;
 alter table public.accolades enable row level security;
+alter table public.testimonials enable row level security;
 
 insert into public.home_projects (image, link, display_order)
 select seed.image, '', seed.display_order

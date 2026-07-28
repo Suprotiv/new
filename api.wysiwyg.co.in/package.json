@@ -10,6 +10,7 @@
     "migrate:editable-italics": "node scripts/migrate-editable-italics-to-db.js",
     "migrate:editable-colors": "node scripts/migrate-editable-colors-to-db.js",
     "remove:button-text-content": "node scripts/remove-button-text-site-content.js",
+    "migrate:testimonials": "node scripts/migrate-testimonials-to-table.js",
     "rollback:supabase-images": "node scripts/rollback-supabase-image-urls-to-uploads.js",
     "normalize:upload-paths": "node scripts/normalize-upload-paths.js",
     "test": "echo \"Error: no test specified\" && exit 1"

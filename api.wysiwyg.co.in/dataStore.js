@@ -133,9 +133,9 @@ function accoladeToRow(accolade) {
 function testimonialFromRow(row) {
   return {
     id: row.id,
-    name: row.project,
-    designation: [row.category, row.award].filter(Boolean).join(' · '),
-    quote: row.description,
+    name: row.name,
+    designation: row.designation,
+    quote: row.quote,
     image: row.image || '',
     order: row.display_order || 0,
   };
@@ -144,10 +144,9 @@ function testimonialFromRow(row) {
 function testimonialToRow(testimonial) {
   return {
     id: testimonial.id,
-    category: testimonial.designation,
-    award: 'Testimonial',
-    project: testimonial.name,
-    description: testimonial.quote,
+    name: testimonial.name,
+    designation: testimonial.designation,
+    quote: testimonial.quote,
     image: testimonial.image || '',
     display_order: Number.isFinite(Number(testimonial.order)) ? Number(testimonial.order) : 0,
   };
@@ -524,7 +523,7 @@ async function deleteAccolade(id) {
 
 async function getTestimonials() {
   const { data, error } = await getSupabase()
-    .from('accolades')
+    .from('testimonials')
     .select('*')
     .order('display_order', { ascending: true })
     .order('created_at', { ascending: true });
@@ -534,7 +533,7 @@ async function getTestimonials() {
 
 async function createTestimonial(testimonial) {
   const { data, error } = await getSupabase()
-    .from('accolades')
+    .from('testimonials')
     .insert(testimonialToRow(testimonial))
     .select()
     .single();
@@ -544,7 +543,7 @@ async function createTestimonial(testimonial) {
 
 async function updateTestimonial(id, testimonial) {
   const { data, error } = await getSupabase()
-    .from('accolades')
+    .from('testimonials')
     .update(testimonialToRow({ ...testimonial, id }))
     .eq('id', id)
     .select()
@@ -555,7 +554,7 @@ async function updateTestimonial(id, testimonial) {
 
 async function deleteTestimonial(id) {
   const { data, error } = await getSupabase()
-    .from('accolades')
+    .from('testimonials')
     .delete()
     .eq('id', id)
     .select()
