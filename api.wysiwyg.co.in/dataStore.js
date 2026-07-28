@@ -47,6 +47,15 @@ function homeHeroImageFromRow(row) {
   };
 }
 
+function homeProjectFromRow(row) {
+  return {
+    id: row.id,
+    image: row.image || '',
+    link: row.link || '',
+    order: row.display_order || 0,
+  };
+}
+
 function categoryFromRow(row) {
   return {
     name: row.name,
@@ -121,6 +130,29 @@ function accoladeToRow(accolade) {
   };
 }
 
+function testimonialFromRow(row) {
+  return {
+    id: row.id,
+    name: row.project,
+    designation: [row.category, row.award].filter(Boolean).join(' · '),
+    quote: row.description,
+    image: row.image || '',
+    order: row.display_order || 0,
+  };
+}
+
+function testimonialToRow(testimonial) {
+  return {
+    id: testimonial.id,
+    category: testimonial.designation,
+    award: 'Testimonial',
+    project: testimonial.name,
+    description: testimonial.quote,
+    image: testimonial.image || '',
+    display_order: Number.isFinite(Number(testimonial.order)) ? Number(testimonial.order) : 0,
+  };
+}
+
 function throwIfError(error) {
   if (error) throw error;
 }
@@ -174,6 +206,56 @@ async function deleteHomeHeroImage(id) {
     .maybeSingle();
   throwIfError(error);
   return data ? homeHeroImageFromRow(data) : null;
+}
+
+async function getHomeProjects() {
+  const { data, error } = await getSupabase()
+    .from('home_projects')
+    .select('*')
+    .order('display_order', { ascending: true })
+    .order('id', { ascending: true });
+  throwIfError(error);
+  return (data || []).map(homeProjectFromRow);
+}
+
+async function createHomeProject(item) {
+  const { data, error } = await getSupabase()
+    .from('home_projects')
+    .insert({
+      image: item.image,
+      link: item.link || '',
+      display_order: item.order,
+    })
+    .select()
+    .single();
+  throwIfError(error);
+  return homeProjectFromRow(data);
+}
+
+async function updateHomeProject(id, item) {
+  const { data, error } = await getSupabase()
+    .from('home_projects')
+    .update({
+      image: item.image,
+      link: item.link || '',
+      display_order: item.order,
+    })
+    .eq('id', id)
+    .select()
+    .single();
+  throwIfError(error);
+  return homeProjectFromRow(data);
+}
+
+async function deleteHomeProject(id) {
+  const { data, error } = await getSupabase()
+    .from('home_projects')
+    .delete()
+    .eq('id', id)
+    .select()
+    .maybeSingle();
+  throwIfError(error);
+  return data ? homeProjectFromRow(data) : null;
 }
 
 async function getProject(projectId) {
@@ -440,6 +522,48 @@ async function deleteAccolade(id) {
   return data ? accoladeFromRow(data) : null;
 }
 
+async function getTestimonials() {
+  const { data, error } = await getSupabase()
+    .from('accolades')
+    .select('*')
+    .order('display_order', { ascending: true })
+    .order('created_at', { ascending: true });
+  throwIfError(error);
+  return (data || []).map(testimonialFromRow);
+}
+
+async function createTestimonial(testimonial) {
+  const { data, error } = await getSupabase()
+    .from('accolades')
+    .insert(testimonialToRow(testimonial))
+    .select()
+    .single();
+  throwIfError(error);
+  return testimonialFromRow(data);
+}
+
+async function updateTestimonial(id, testimonial) {
+  const { data, error } = await getSupabase()
+    .from('accolades')
+    .update(testimonialToRow({ ...testimonial, id }))
+    .eq('id', id)
+    .select()
+    .single();
+  throwIfError(error);
+  return testimonialFromRow(data);
+}
+
+async function deleteTestimonial(id) {
+  const { data, error } = await getSupabase()
+    .from('accolades')
+    .delete()
+    .eq('id', id)
+    .select()
+    .maybeSingle();
+  throwIfError(error);
+  return data ? testimonialFromRow(data) : null;
+}
+
 async function getSiteContent(defaultSiteContent) {
   const { data, error } = await getSupabase()
     .from('site_content')
@@ -477,34 +601,42 @@ async function updateSiteImage(key, value, defaultSiteContent) {
 
 module.exports = {
   createHomeHeroImages,
+  createHomeProject,
   createAccolade,
   createCategory,
   createClientRecord,
   createTeamMember,
+  createTestimonial,
   deleteAccolade,
   deleteCategory,
   deleteClientRecord,
   deleteHomeHeroImage,
+  deleteHomeProject,
   deleteProject,
   deleteTeamMember,
+  deleteTestimonial,
   getCategories,
   getAccolades,
   getCategory,
   getClients,
   getHomeHeroImages,
+  getHomeProjects,
   getProject,
   getProjects,
   getSiteContent,
   getTeamMembers,
+  getTestimonials,
   reorderClients,
   reorderTeamMembers,
   updateCategory,
   updateAccolade,
   updateClientRecord,
   updateHomeHeroImage,
+  updateHomeProject,
   updateProject,
   updateSiteImage,
   updateSiteText,
   updateTeamMember,
+  updateTestimonial,
   upsertProject,
 };

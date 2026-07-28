@@ -25,6 +25,7 @@ const PORTFOLIO_PATH = path.join(__dirname, 'portfolio.json');
 const TEAM_PATH = path.join(__dirname, 'team.json');
 const CLIENTS_PATH = path.join(__dirname, 'clients.json');
 const TEAM_IMAGE_SIZE_LIMIT = 2 * 1024 * 1024;
+const HOME_PROJECT_IMAGE_SIZE_LIMIT = 5 * 1024 * 1024;
 
 app.use(cors());
 app.use(express.json());
@@ -59,7 +60,23 @@ const homeHeroUpload = multer({
     cb(null, true);
   },
 });
+const homeProjectUpload = multer({
+  storage,
+  limits: { fileSize: HOME_PROJECT_IMAGE_SIZE_LIMIT },
+  fileFilter: function (req, file, cb) {
+    if (!file.mimetype.startsWith('image/')) return cb(new Error('Only image uploads are allowed'));
+    cb(null, true);
+  },
+});
 const accoladeUpload = multer({
+  storage,
+  limits: { fileSize: TEAM_IMAGE_SIZE_LIMIT },
+  fileFilter: function (req, file, cb) {
+    if (!file.mimetype.startsWith('image/')) return cb(new Error('Only image uploads are allowed'));
+    cb(null, true);
+  },
+});
+const testimonialUpload = multer({
   storage,
   limits: { fileSize: TEAM_IMAGE_SIZE_LIMIT },
   fileFilter: function (req, file, cb) {
@@ -101,6 +118,16 @@ function handleMulterError(error, req, res, next) {
   }
 
   return res.status(400).json({ error: error.message || 'File upload failed' });
+}
+
+function handleHomeProjectMulterError(error, req, res, next) {
+  if (!error) return next();
+
+  if (error instanceof multer.MulterError && error.code === 'LIMIT_FILE_SIZE') {
+    return res.status(400).json({ error: 'Home project images must be 5 MB or smaller' });
+  }
+
+  return res.status(400).json({ error: error.message || 'Home project image upload failed' });
 }
 
 function slugify(value) {
@@ -216,6 +243,14 @@ async function relocateAccoladeImages(items) {
   return { items: relocated, changed };
 }
 
+function isManagedTestimonialImage(imagePath) {
+  return Boolean(imagePath && imagePath.startsWith('/uploads/testimonials/'));
+}
+
+function isManagedHomeProjectImage(imagePath) {
+  return Boolean(imagePath && imagePath.startsWith('/uploads/home-projects/'));
+}
+
 async function relocateHomeHeroImages(items) {
   let changed = false;
   const relocated = [];
@@ -238,7 +273,6 @@ const defaultSiteContent = {
     "home.hero.title.line1": "We don’t",
     "home.hero.title.line2": "just design,",
     "home.hero.title.accent": "we disrupt",
-    "home.hero.cta": "See work",
     "home.clients.intro": "At Wysiwyg, we design with heart, mind and a bit of madness.\nBecause when you’re creating something unforgettable, playing it safe isn’t part of the script.\nAs already successfully implemented by 250+ partners:",
     "home.news.heading": "In the news",
     "home.news.opening": "Creativity isn’t a box to fit into;\nit’s a wall to break through.\nWe chase the spark, ride the chaos\nand craft designs\nthat don’t just\nsit there—they shout!",
@@ -251,10 +285,15 @@ const defaultSiteContent = {
     "home.news.vibe": "Symmetry is optional.\nVibe is everything.",
     "home.news.movedOn": "By the time everyone else catches on,\nwe’ve already moved on.",
     "home.news.real": "Real design. Real impact. No filters.",
+    "home.news.manifesto": "Creativity isn’t a box to fit into;\nit’s a wall to break through.\n[color=#b65a2a]*We chase the spark, ride the chaos\nand craft designs*[/color] that don’t just\nsit there—they shout!\n\n[color=#5a6b3e]*Design with guts,* not just grids.[/color]\nWe listen, we learn, we feel.\nGreat design isn’t just seen;\nit’s experienced.\n\nWe design with precision but we leave\nroom for the unexpected.\n\n[color=#1f7f8f]Because *perfect* is boring.[/color]\n\nColours aren’t curated—they explode.\nPalettes are for painters;\nwe mix shades with attitude.\n[color=#f2bd3f]Bold? Always. *Basic? Never.*[/color]\n\nDesign isn’t mainstream.\nIt’s got character. It grabs attention,\nspins it around and leaves a mark.\nIf you want quiet, you’re in the wrong place.\n\nTrends are cool, but authenticity\nis cooler. [color=#5a6b3e]We don’t follow the\nalgorithm—*we rewrite it.*[/color]\n\nSymmetry is optional.\n[color=#6b2d83]*Vibe is everything.*[/color]\n\nBy the time everyone else catches on,\nwe’ve already moved on.\n\nReal design. Real impact. No filters.",
     "home.featured.title": "featured Udyatt Luxury",
     "home.featured.description": "We partnered with Ambuja Neotia to design the brochure for Udyatt, the final masterpiece of legendary architect BV Doshi. Driven by a minimalist visual language, custom iconography and tactile material explorations, the piece beautifully balances art, science and philosophy. It stands as a timeless, breathing tribute to ultra-luxury living.",
     "home.featured.category": "COLLATERALS",
     "home.featured.type": "Brochure",
+    "home.story.heading": "Wysiwyg's quiet rise as Calcutta's",
+    "home.story.accent": "design mainstay",
+    "home.collage.heading": "Design with guts,",
+    "home.collage.subheading": "not just grids",
     "home.work.heading": "our work",
     "home.work.panel1.caption": "SnoBite | Packaging",
     "home.work.panel2.caption": "ITC Hotels | Poster",
@@ -690,6 +729,87 @@ app.delete('/home-hero-images/:id', verifyToken, async (req, res) => {
   }
 });
 
+app.get('/home-projects', async (req, res) => {
+  try {
+    res.json({ items: await dataStore.getHomeProjects() });
+  } catch (error) {
+    console.error('Error reading home projects:', error);
+    res.status(500).json({ error: 'Failed to read home projects' });
+  }
+});
+
+app.post('/home-projects', verifyToken, homeProjectUpload.single('image'), handleHomeProjectMulterError, async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'An image is required' });
+  let imagePath;
+  try {
+    imagePath = await uploadImageFile(req.file, 'home-projects');
+    const existing = await dataStore.getHomeProjects();
+    const item = await dataStore.createHomeProject({
+      image: imagePath,
+      link: String(req.body.link || '').trim(),
+      order: existing.length,
+    });
+    res.status(201).json({ item });
+  } catch (error) {
+    if (imagePath) await removeImage(imagePath);
+    return sendUploadStorageError(error, res, 'Failed to create home project');
+  }
+});
+
+app.put('/home-projects/order', verifyToken, async (req, res) => {
+  const ids = Array.isArray(req.body.ids) ? req.body.ids.map(Number).filter(Number.isFinite) : [];
+  try {
+    const existing = await dataStore.getHomeProjects();
+    if (ids.length !== existing.length || new Set(ids).size !== existing.length) {
+      return res.status(400).json({ error: 'The complete project order is required' });
+    }
+    const byId = new Map(existing.map(item => [Number(item.id), item]));
+    if (ids.some(id => !byId.has(id))) return res.status(400).json({ error: 'Invalid project order' });
+    await Promise.all(ids.map((id, order) => dataStore.updateHomeProject(id, { ...byId.get(id), order })));
+    res.json({ items: await dataStore.getHomeProjects() });
+  } catch (error) {
+    console.error('Error reordering home projects:', error);
+    res.status(500).json({ error: 'Failed to reorder home projects' });
+  }
+});
+
+app.put('/home-projects/:id', verifyToken, homeProjectUpload.single('image'), handleHomeProjectMulterError, async (req, res) => {
+  let uploadedPath;
+  try {
+    const items = await dataStore.getHomeProjects();
+    const previous = items.find(item => String(item.id) === req.params.id);
+    if (!previous) return res.status(404).json({ error: 'Home project not found' });
+    if (req.file) uploadedPath = await uploadImageFile(req.file, 'home-projects');
+    const item = await dataStore.updateHomeProject(req.params.id, {
+      ...previous,
+      image: uploadedPath || previous.image,
+      link: String(req.body.link || '').trim(),
+    });
+    if (uploadedPath && isManagedHomeProjectImage(previous.image)) {
+      await removeImage(previous.image);
+    }
+    res.json({ item });
+  } catch (error) {
+    if (uploadedPath) await removeImage(uploadedPath);
+    return sendUploadStorageError(error, res, 'Failed to update home project');
+  }
+});
+
+app.delete('/home-projects/:id', verifyToken, async (req, res) => {
+  try {
+    const item = await dataStore.deleteHomeProject(req.params.id);
+    if (!item) return res.status(404).json({ error: 'Home project not found' });
+    if (isManagedHomeProjectImage(item.image)) await removeImage(item.image);
+    const remaining = await dataStore.getHomeProjects();
+    await Promise.all(
+      remaining.map((entry, order) => dataStore.updateHomeProject(entry.id, { ...entry, order }))
+    );
+    res.json({ message: 'Home project deleted' });
+  } catch (error) {
+    return sendUploadStorageError(error, res, 'Failed to delete home project');
+  }
+});
+
 app.get('/accolades', async (req, res) => {
   try {
     const currentItems = await dataStore.getAccolades();
@@ -767,6 +887,80 @@ app.delete('/accolades/:id', verifyToken, async (req, res) => {
     res.json({ message: 'Accolade deleted' });
   } catch (error) {
     return sendUploadStorageError(error, res, 'Failed to delete accolade');
+  }
+});
+
+app.get('/testimonials', async (req, res) => {
+  try {
+    res.json({ items: await dataStore.getTestimonials() });
+  } catch (error) {
+    console.error('Error reading testimonials:', error);
+    res.status(500).json({ error: 'Failed to read testimonials' });
+  }
+});
+
+app.post('/testimonials', verifyToken, testimonialUpload.single('image'), async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'A photo is required' });
+  let imagePath;
+  try {
+    imagePath = await uploadImageFile(req.file, 'testimonials');
+    const items = await dataStore.getTestimonials();
+    const item = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      name: String(req.body.name || '').trim(),
+      designation: String(req.body.designation || '').trim(),
+      quote: String(req.body.quote || '').trim(),
+      image: imagePath,
+      order: items.length,
+    };
+    if (!item.name || !item.designation || !item.quote) {
+      await removeImage(imagePath);
+      return res.status(400).json({ error: 'All text fields are required' });
+    }
+    res.status(201).json({ item: await dataStore.createTestimonial(item) });
+  } catch (error) {
+    if (imagePath) await removeImage(imagePath);
+    return sendUploadStorageError(error, res, 'Failed to create testimonial');
+  }
+});
+
+app.put('/testimonials/:id', verifyToken, testimonialUpload.single('image'), async (req, res) => {
+  let uploadedPath;
+  try {
+    const items = await dataStore.getTestimonials();
+    const previous = items.find(item => String(item.id) === req.params.id);
+    if (!previous) return res.status(404).json({ error: 'Testimonial not found' });
+    if (req.file) uploadedPath = await uploadImageFile(req.file, 'testimonials');
+    const next = {
+      ...previous,
+      name: String(req.body.name || '').trim(),
+      designation: String(req.body.designation || '').trim(),
+      quote: String(req.body.quote || '').trim(),
+      image: uploadedPath || previous.image,
+    };
+    if (!next.name || !next.designation || !next.quote) {
+      if (uploadedPath) await removeImage(uploadedPath);
+      return res.status(400).json({ error: 'All text fields are required' });
+    }
+    const updated = await dataStore.updateTestimonial(req.params.id, next);
+    if (uploadedPath && isManagedTestimonialImage(previous.image)) await removeImage(previous.image);
+    res.json({ item: updated });
+  } catch (error) {
+    if (uploadedPath) await removeImage(uploadedPath);
+    return sendUploadStorageError(error, res, 'Failed to update testimonial');
+  }
+});
+
+app.delete('/testimonials/:id', verifyToken, async (req, res) => {
+  try {
+    const item = await dataStore.deleteTestimonial(req.params.id);
+    if (!item) return res.status(404).json({ error: 'Testimonial not found' });
+    if (isManagedTestimonialImage(item.image)) await removeImage(item.image);
+    const remaining = await dataStore.getTestimonials();
+    await Promise.all(remaining.map((entry, order) => dataStore.updateTestimonial(entry.id, { ...entry, order })));
+    res.json({ message: 'Testimonial deleted' });
+  } catch (error) {
+    return sendUploadStorageError(error, res, 'Failed to delete testimonial');
   }
 });
 

@@ -59,6 +59,15 @@ create table if not exists public.home_hero_images (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists public.home_projects (
+  id bigint generated always as identity primary key,
+  image text not null check (length(image) > 0),
+  link text not null default '',
+  display_order integer not null default 0 check (display_order >= 0),
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 create table if not exists public.accolades (
   id text primary key,
   category text not null,
@@ -111,6 +120,11 @@ create trigger set_home_hero_images_updated_at
 before update on public.home_hero_images
 for each row execute function public.set_updated_at();
 
+drop trigger if exists set_home_projects_updated_at on public.home_projects;
+create trigger set_home_projects_updated_at
+before update on public.home_projects
+for each row execute function public.set_updated_at();
+
 drop trigger if exists set_accolades_updated_at on public.accolades;
 create trigger set_accolades_updated_at
 before update on public.accolades
@@ -123,6 +137,7 @@ create index if not exists team_members_order_idx on public.team_members (displa
 create index if not exists clients_order_idx on public.clients (display_order);
 create index if not exists site_content_type_idx on public.site_content (type);
 create index if not exists home_hero_images_order_idx on public.home_hero_images (display_order, id);
+create index if not exists home_projects_order_idx on public.home_projects (display_order, id);
 create index if not exists accolades_display_order_idx on public.accolades (display_order);
 
 alter table public.projects enable row level security;
@@ -131,4 +146,20 @@ alter table public.team_members enable row level security;
 alter table public.clients enable row level security;
 alter table public.site_content enable row level security;
 alter table public.home_hero_images enable row level security;
+alter table public.home_projects enable row level security;
 alter table public.accolades enable row level security;
+
+insert into public.home_projects (image, link, display_order)
+select seed.image, '', seed.display_order
+from (
+  values
+    ('/uploads/home-projects/work-SnoBite.jpg', 0),
+    ('/uploads/home-projects/scrollImage.jpg', 1),
+    ('/uploads/home-projects/work-ITC-Hotel.jpg', 2),
+    ('/uploads/home-projects/scrollImage2.jpg', 3),
+    ('/uploads/home-projects/work-VION.jpg', 4),
+    ('/uploads/home-projects/scrollImage4.jpg', 5),
+    ('/uploads/home-projects/img-News-Siddha-Serena-bottom.jpeg', 6),
+    ('/uploads/home-projects/scrollImage5.jpg', 7)
+) as seed(image, display_order)
+where not exists (select 1 from public.home_projects);
