@@ -99,9 +99,13 @@ async function migrateTeam(imageMap) {
   const members = await dataStore.getTeamMembers();
 
   for (const member of members) {
-    const nextImage = replaceImagePath(member.image, imageMap);
-    if (nextImage !== member.image) {
-      await dataStore.updateTeamMember(member.id, { ...member, image: nextImage });
+    const nextMember = {
+      ...member,
+      normalImage: replaceImagePath(member.normalImage, imageMap),
+      hoverImage: replaceImagePath(member.hoverImage, imageMap),
+    };
+    if (JSON.stringify(nextMember) !== JSON.stringify(member)) {
+      await dataStore.updateTeamMember(member.id, nextMember);
       console.log(`Updated team member ${member.id}`);
     }
   }

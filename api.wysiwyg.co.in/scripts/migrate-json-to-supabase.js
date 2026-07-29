@@ -37,7 +37,10 @@ function teamMemberToRow(member) {
     id: member.id,
     name: member.name || '',
     position: member.position || '',
-    image: member.image || '',
+    image: JSON.stringify({
+      normalImage: member.normalImage || '',
+      hoverImage: member.hoverImage || member.image || '',
+    }),
     display_order: Number.isFinite(Number(member.order)) ? Number(member.order) : 0,
   };
 }

@@ -76,6 +76,34 @@ function normalizeAccoladesJson(value) {
   }
 }
 
+function normalizeTeamImages(value) {
+  try {
+    const images = JSON.parse(value);
+    if (!images || typeof images !== 'object' || Array.isArray(images)) return value;
+    return JSON.stringify({
+      normalImage: toRelativeUploadPath(images.normalImage || ''),
+      hoverImage: toRelativeUploadPath(images.hoverImage || ''),
+    });
+  } catch {
+    return toRelativeUploadPath(value);
+  }
+}
+
+async function normalizeTeam(db) {
+  const { data, error } = await db.from('team_members').select('id, image');
+  if (error) throw error;
+  let count = 0;
+
+  for (const row of data || []) {
+    const image = normalizeTeamImages(row.image);
+    if (image === row.image) continue;
+    const { error: updateError } = await db.from('team_members').update({ image }).eq('id', row.id);
+    if (updateError) throw updateError;
+    count += 1;
+  }
+  return count;
+}
+
 async function normalizeSiteContent(db) {
   const { data, error } = await db.from('site_content').select('key, type, value');
   if (error) throw error;
@@ -99,7 +127,7 @@ async function main() {
   const db = getSupabase();
   const results = {
     projects: await normalizeProjects(db),
-    teamMembers: await normalizeSimpleTable(db, 'team_members', 'id', ['image']),
+    teamMembers: await normalizeTeam(db),
     clients: await normalizeSimpleTable(db, 'clients', 'id', ['bw_image', 'color_image']),
     siteContent: await normalizeSiteContent(db),
   };

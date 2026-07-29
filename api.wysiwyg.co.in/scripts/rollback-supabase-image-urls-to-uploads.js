@@ -122,10 +122,14 @@ async function rollbackTeam(legacyImageMap) {
   const members = await dataStore.getTeamMembers();
 
   for (const member of members) {
-    const nextImage = toUploadPath(member.image, legacyImageMap);
-    if (nextImage === member.image) continue;
+    const nextMember = {
+      ...member,
+      normalImage: toUploadPath(member.normalImage, legacyImageMap),
+      hoverImage: toUploadPath(member.hoverImage, legacyImageMap),
+    };
+    if (JSON.stringify(nextMember) === JSON.stringify(member)) continue;
 
-    await dataStore.updateTeamMember(member.id, { ...member, image: nextImage });
+    await dataStore.updateTeamMember(member.id, nextMember);
     count += 1;
   }
 

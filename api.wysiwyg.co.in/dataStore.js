@@ -64,12 +64,31 @@ function categoryFromRow(row) {
   };
 }
 
+function parseTeamImages(value) {
+  if (!value) return { normalImage: '', hoverImage: '' };
+
+  try {
+    const parsed = JSON.parse(value);
+    if (parsed && typeof parsed === 'object') {
+      return {
+        normalImage: String(parsed.normalImage || ''),
+        hoverImage: String(parsed.hoverImage || ''),
+      };
+    }
+  } catch {
+    // Legacy rows contain the hover image path directly.
+  }
+
+  return { normalImage: '', hoverImage: String(value) };
+}
+
 function teamMemberFromRow(row) {
+  const images = parseTeamImages(row.image);
   return {
     id: row.id,
     name: row.name,
     position: row.position,
-    image: row.image || '',
+    ...images,
     order: row.display_order || 0,
   };
 }
@@ -79,7 +98,10 @@ function teamMemberToRow(member) {
     id: member.id,
     name: member.name,
     position: member.position,
-    image: member.image || '',
+    image: JSON.stringify({
+      normalImage: member.normalImage || '',
+      hoverImage: member.hoverImage || member.image || '',
+    }),
     display_order: Number.isFinite(Number(member.order)) ? Number(member.order) : 0,
   };
 }

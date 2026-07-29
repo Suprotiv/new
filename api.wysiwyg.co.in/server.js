@@ -94,7 +94,10 @@ const teamUpload = multer({
     }
     cb(null, true);
   },
-});
+}).fields([
+  { name: 'normalImage', maxCount: 1 },
+  { name: 'hoverImage', maxCount: 1 },
+]);
 
 const clientUpload = multer({
   storage,
@@ -211,18 +214,20 @@ async function removeProjectFiles(project) {
   }
 }
 
+function isManagedUploadInFolder(imagePath, folder) {
+  const relativePath = getUploadRelativePath(imagePath);
+  const normalizedFolder = String(folder || '').replace(/^\/+|\/+$/g, '');
+  return Boolean(relativePath && normalizedFolder && relativePath.startsWith(`${normalizedFolder}/`));
+}
+
 function isUploadedSiteContentImage(imagePath) {
-  return Boolean(
-    imagePath &&
-      imagePath.startsWith('/uploads/site-content/uploads/')
-  );
+  return isManagedUploadInFolder(imagePath, 'site-content/uploads');
 }
 
 function isManagedAccoladeImage(imagePath) {
-  return Boolean(
-    imagePath &&
-      (imagePath.startsWith('/uploads/accolades/') ||
-        imagePath.startsWith('/uploads/site-content/uploads/'))
+  return (
+    isManagedUploadInFolder(imagePath, 'accolades') ||
+    isManagedUploadInFolder(imagePath, 'site-content/uploads')
   );
 }
 
@@ -244,11 +249,11 @@ async function relocateAccoladeImages(items) {
 }
 
 function isManagedTestimonialImage(imagePath) {
-  return Boolean(imagePath && imagePath.startsWith('/uploads/testimonials/'));
+  return isManagedUploadInFolder(imagePath, 'testimonials');
 }
 
 function isManagedHomeProjectImage(imagePath) {
-  return Boolean(imagePath && imagePath.startsWith('/uploads/home-projects/'));
+  return isManagedUploadInFolder(imagePath, 'home-projects');
 }
 
 async function relocateHomeHeroImages(items) {
@@ -653,8 +658,9 @@ app.post('/site-content/image', verifyToken, siteContentUpload.single('image'), 
     return res.status(400).json({ error: 'An image key and file are required' });
   }
 
+  let nextImagePath = '';
   try {
-    const nextImagePath = await uploadImageFile(req.file, 'site-content/uploads');
+    nextImagePath = await uploadImageFile(req.file, 'site-content/uploads');
     const currentContent = await dataStore.getSiteContent(defaultSiteContent);
     const previousImagePath = currentContent.images?.[key];
     const content = await dataStore.updateSiteImage(key, nextImagePath, defaultSiteContent);
@@ -663,6 +669,7 @@ app.post('/site-content/image', verifyToken, siteContentUpload.single('image'), 
     }
     res.json({ message: 'Image updated successfully', image: nextImagePath, content });
   } catch (error) {
+    if (nextImagePath) await removeImage(nextImagePath);
     return sendUploadStorageError(error, res, 'Failed to update site image');
   }
 });
@@ -1060,7 +1067,7 @@ app.get('/team', async (req, res) => {
   }
 });
 
-app.post('/team', verifyToken, teamUpload.single('image'), handleMulterError, async (req, res) => {
+app.post('/team', verifyToken, teamUpload, handleMulterError, async (req, res) => {
   const { name, position, order } = req.body;
   const nextName = String(name || '').trim();
   const nextPosition = String(position || '').trim();
@@ -1069,15 +1076,22 @@ app.post('/team', verifyToken, teamUpload.single('image'), handleMulterError, as
     return res.status(400).json({ error: 'Name and position are required' });
   }
 
-  let uploadedImage = '';
+  let uploadedNormalImage = '';
+  let uploadedHoverImage = '';
   try {
     const members = await dataStore.getTeamMembers();
-    uploadedImage = req.file ? await uploadImageFile(req.file, 'team') : '';
+    uploadedNormalImage = req.files?.normalImage?.[0]
+      ? await uploadImageFile(req.files.normalImage[0], 'team')
+      : '';
+    uploadedHoverImage = req.files?.hoverImage?.[0]
+      ? await uploadImageFile(req.files.hoverImage[0], 'team')
+      : '';
     const member = {
       id: slugify(nextName) || `member-${Date.now()}`,
       name: nextName,
       position: nextPosition,
-      image: uploadedImage,
+      normalImage: uploadedNormalImage,
+      hoverImage: uploadedHoverImage,
       order: Number.isFinite(Number(order)) ? Number(order) : members.length,
     };
 
@@ -1089,7 +1103,7 @@ app.post('/team', verifyToken, teamUpload.single('image'), handleMulterError, as
     const nextMembers = await dataStore.getTeamMembers();
     res.status(201).json({ message: 'Team member added successfully', member: created, members: nextMembers });
   } catch (error) {
-    await removeImage(uploadedImage);
+    await Promise.all([removeImage(uploadedNormalImage), removeImage(uploadedHoverImage)]);
     return sendUploadStorageError(error, res, 'Failed to add team member');
   }
 });
@@ -1110,7 +1124,7 @@ app.put('/team/reorder', verifyToken, async (req, res) => {
   }
 });
 
-app.put('/team/:id', verifyToken, teamUpload.single('image'), handleMulterError, async (req, res) => {
+app.put('/team/:id', verifyToken, teamUpload, handleMulterError, async (req, res) => {
   const { id } = req.params;
   const { name, position, order } = req.body;
   const nextName = String(name || '').trim();
@@ -1120,7 +1134,8 @@ app.put('/team/:id', verifyToken, teamUpload.single('image'), handleMulterError,
     return res.status(400).json({ error: 'Name and position are required' });
   }
 
-  let uploadedImage = '';
+  let uploadedNormalImage = '';
+  let uploadedHoverImage = '';
   try {
     const members = await dataStore.getTeamMembers();
     const current = members.find(member => member.id === id);
@@ -1128,24 +1143,30 @@ app.put('/team/:id', verifyToken, teamUpload.single('image'), handleMulterError,
       return res.status(404).json({ error: 'Team member not found' });
     }
 
-    uploadedImage = req.file ? await uploadImageFile(req.file, 'team') : '';
-    const nextImage = uploadedImage || current.image;
+    uploadedNormalImage = req.files?.normalImage?.[0]
+      ? await uploadImageFile(req.files.normalImage[0], 'team')
+      : '';
+    uploadedHoverImage = req.files?.hoverImage?.[0]
+      ? await uploadImageFile(req.files.hoverImage[0], 'team')
+      : '';
+    const nextNormalImage = uploadedNormalImage || current.normalImage;
+    const nextHoverImage = uploadedHoverImage || current.hoverImage;
 
     const member = await dataStore.updateTeamMember(id, {
       ...current,
       name: nextName,
       position: nextPosition,
-      image: nextImage,
+      normalImage: nextNormalImage,
+      hoverImage: nextHoverImage,
       order: Number.isFinite(Number(order)) ? Number(order) : current.order,
     });
 
     const nextMembers = await dataStore.getTeamMembers();
-    if (uploadedImage && current.image && current.image !== nextImage) {
-      await removeImage(current.image);
-    }
+    if (uploadedNormalImage && current.normalImage !== nextNormalImage) await removeImage(current.normalImage);
+    if (uploadedHoverImage && current.hoverImage !== nextHoverImage) await removeImage(current.hoverImage);
     res.json({ message: 'Team member updated successfully', member, members: nextMembers });
   } catch (error) {
-    await removeImage(uploadedImage);
+    await Promise.all([removeImage(uploadedNormalImage), removeImage(uploadedHoverImage)]);
     return sendUploadStorageError(error, res, 'Failed to update team member');
   }
 });
@@ -1157,7 +1178,10 @@ app.delete('/team/:id', verifyToken, async (req, res) => {
     const deleted = await dataStore.deleteTeamMember(id);
     if (!deleted) return res.status(404).json({ error: 'Team member not found' });
 
-    await removeImage(deleted.image);
+    await Promise.all([
+      removeImage(deleted.normalImage),
+      deleted.hoverImage !== deleted.normalImage ? removeImage(deleted.hoverImage) : Promise.resolve(),
+    ]);
     const members = await dataStore.getTeamMembers();
     res.json({ message: 'Team member deleted successfully', deleted, members });
   } catch (error) {
