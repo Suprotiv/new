@@ -297,6 +297,8 @@ const defaultSiteContent = {
     "home.featured.type": "Brochure",
     "home.story.heading": "Wysiwyg's quiet rise as Calcutta's",
     "home.story.accent": "design mainstay",
+    "home.story.articleButton.text": "READ t2 ARTICLE",
+    "home.story.articleButton.link": "/about",
     "home.collage.heading": "Design with guts,",
     "home.collage.subheading": "not just grids",
     "home.work.heading": "our work",
