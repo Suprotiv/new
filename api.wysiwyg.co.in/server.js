@@ -1031,6 +1031,7 @@ app.delete('/testimonials/:id', verifyToken, async (req, res) => {
 app.get('/categories', async (req, res) => {
   try {
     const categories = await dataStore.getCategories();
+    res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
     res.json(categories);
   } catch (parseError) {
     console.error('Error reading categories:', parseError);
