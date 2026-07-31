@@ -493,8 +493,35 @@ app.post("/projects", verifyToken, upload, async (req, res) => {
 // GET - Fetch all projects
 app.get('/projects', async (req, res) => {
   try {
+    const usesPagination =
+      req.query.limit !== undefined ||
+      req.query.offset !== undefined ||
+      req.query.category !== undefined;
+
+    if (!usesPagination) {
       const projects = await dataStore.getProjects();
-      res.json(projects);
+      return res.json(projects);
+    }
+
+    const limit = Number.parseInt(req.query.limit, 10);
+    const offset = Number.parseInt(req.query.offset || '0', 10);
+
+    if (!Number.isInteger(limit) || limit < 1 || limit > 50) {
+      return res.status(400).json({ error: 'limit must be an integer between 1 and 50' });
+    }
+
+    if (!Number.isInteger(offset) || offset < 0) {
+      return res.status(400).json({ error: 'offset must be a non-negative integer' });
+    }
+
+    const result = await dataStore.getProjectsPage({
+      category: String(req.query.category || '').trim(),
+      limit,
+      offset,
+    });
+
+    res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
+    return res.json(result);
   } catch (parseError) {
     console.error('Error reading projects:', parseError);
     res.status(500).json({ error: 'Failed to read projects' });
@@ -933,6 +960,34 @@ app.post('/testimonials', verifyToken, testimonialUpload.single('image'), async 
   }
 });
 
+app.put('/testimonials/order', verifyToken, async (req, res) => {
+  const ids = Array.isArray(req.body.ids)
+    ? req.body.ids.map(id => String(id))
+    : [];
+
+  try {
+    const existing = await dataStore.getTestimonials();
+    if (ids.length !== existing.length || new Set(ids).size !== existing.length) {
+      return res.status(400).json({ error: 'The complete testimonial order is required' });
+    }
+
+    const byId = new Map(existing.map(item => [String(item.id), item]));
+    if (ids.some(id => !byId.has(id))) {
+      return res.status(400).json({ error: 'Invalid testimonial order' });
+    }
+
+    await Promise.all(
+      ids.map((id, order) =>
+        dataStore.updateTestimonial(id, { ...byId.get(id), order })
+      )
+    );
+    return res.json({ items: await dataStore.getTestimonials() });
+  } catch (error) {
+    console.error('Error reordering testimonials:', error);
+    return res.status(500).json({ error: 'Failed to reorder testimonials' });
+  }
+});
+
 app.put('/testimonials/:id', verifyToken, testimonialUpload.single('image'), async (req, res) => {
   let uploadedPath;
   try {
@@ -980,6 +1035,21 @@ app.get('/categories', async (req, res) => {
   } catch (parseError) {
     console.error('Error reading categories:', parseError);
     res.status(500).json({ error: 'Failed to read categories' });
+  }
+});
+
+app.get('/categories/:slug', async (req, res) => {
+  try {
+    const category = await dataStore.getCategory(req.params.slug);
+    if (!category) {
+      return res.status(404).json({ error: 'Category not found' });
+    }
+
+    res.set('Cache-Control', 'public, max-age=300, stale-while-revalidate=600');
+    return res.json(category);
+  } catch (error) {
+    console.error('Error reading category:', error);
+    return res.status(500).json({ error: 'Failed to read category' });
   }
 });
 

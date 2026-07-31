@@ -39,6 +39,15 @@ function projectToRow(project) {
   };
 }
 
+function projectCardFromRow(row) {
+  return {
+    project_id: row.project_id,
+    title: row.title || '',
+    services: row.meta?.services || '',
+    mainImage: row.main_image || '',
+  };
+}
+
 function homeHeroImageFromRow(row) {
   return {
     id: row.id,
@@ -185,6 +194,28 @@ async function getProjects() {
     .order('title', { ascending: true });
   throwIfError(error);
   return (data || []).map(projectFromRow);
+}
+
+async function getProjectsPage({ category, limit, offset }) {
+  let query = getSupabase()
+    .from('projects')
+    .select('project_id,title,meta,categories,main_image')
+    .order('title', { ascending: true })
+    .order('project_id', { ascending: true });
+
+  if (category && category.toLowerCase() !== 'all') {
+    query = query.contains('categories', [category]);
+  }
+
+  // Fetch one extra record so the client knows whether another page exists.
+  const { data, error } = await query.range(offset, offset + limit);
+  throwIfError(error);
+
+  const rows = data || [];
+  return {
+    projects: rows.slice(0, limit).map(projectCardFromRow),
+    hasMore: rows.length > limit,
+  };
 }
 
 async function getHomeHeroImages() {
@@ -644,6 +675,7 @@ module.exports = {
   getHomeProjects,
   getProject,
   getProjects,
+  getProjectsPage,
   getSiteContent,
   getTeamMembers,
   getTestimonials,
