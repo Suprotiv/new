@@ -30,7 +30,10 @@ const HOME_PROJECT_IMAGE_SIZE_LIMIT = 5 * 1024 * 1024;
 app.use(cors());
 app.use(express.json());
 ensureUploadDirectory();
-app.use('/uploads', express.static(UPLOAD_DIR));
+app.use('/uploads', express.static(UPLOAD_DIR, {
+  immutable: true,
+  maxAge: '1y',
+}));
 
 
 const JWT_SECRET = process.env.JWT_SECRET || "new_keyssqww";
