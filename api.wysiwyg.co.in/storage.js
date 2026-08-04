@@ -2,8 +2,16 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
+require('dotenv').config({ path: path.join(__dirname, '.env') });
 
-const UPLOAD_DIR = process.env.UPLOAD_DIR || '/home/u148414751/uploads';
+// Keep every filesystem operation tied to one dynamically configured root.
+// Resolving it once also makes relative UPLOAD_DIR values predictable regardless
+// of the directory from which the API process is started.
+const configuredUploadDir = process.env.UPLOAD_DIR?.trim();
+const UPLOAD_DIR = path.resolve(
+  __dirname,
+  configuredUploadDir || 'uploads'
+);
 
 class UploadStorageError extends Error {
   constructor(message, cause) {
