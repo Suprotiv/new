@@ -330,6 +330,16 @@ const defaultSiteContent = {
     "home.work.panel2.image": publicUploadPath("site-content/default/work-ITC-Hotel.jpg"),
     "home.work.panel3.image": publicUploadPath("site-content/default/work-VION.jpg"),
     "home.prefooter.image": publicUploadPath("site-content/default/pre-footer.png"),
+    "home.manifesto.image": "/images/kolkata-sketch.png",
+    "jobs.hero.image": "/images/ban-jobs.jpg",
+    "jobs.poster.1": "/images/jobs/img-wi-new-Job-Apply-now.png",
+    "jobs.poster.2": "/images/jobs/img-wi-new-Up-skill.png",
+    "jobs.poster.3": "/images/jobs/img-wi-new-Get-real-projects.png",
+    "jobs.poster.4": "/images/jobs/img-wi-new-Mentor.png",
+    "jobs.poster.5": "/images/jobs/img-wi-new-Job-roles.png",
+    "jobs.poster.6": "/images/jobs/img-wi-new-Summer-of-26.png",
+    "jobs.poster.7": "/images/jobs/img-wi-new-Earning-Learnings.png",
+    "jobs.poster.8": "/images/jobs/img-wi-new-Discover-a-new-city.png",
   },
 };
 
