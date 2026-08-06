@@ -12,6 +12,7 @@ const UPLOAD_DIR = path.resolve(
   __dirname,
   configuredUploadDir || 'uploads'
 );
+const MAX_IMAGE_WIDTH = 1920;
 
 class UploadStorageError extends Error {
   constructor(message, cause) {
@@ -97,7 +98,8 @@ async function convertImageToWebp(buffer) {
   try {
     return await sharp(buffer, { animated: true })
       .rotate()
-      .webp({ quality: 82, effort: 4 })
+      .resize({ width: MAX_IMAGE_WIDTH, withoutEnlargement: true })
+      .webp({ quality: 78, effort: 4 })
       .toBuffer();
   } catch (error) {
     throw new UploadStorageError('Failed to convert uploaded image to WebP', error);
@@ -198,6 +200,7 @@ function removeUploadFolder(...parts) {
 
 module.exports = {
   UPLOAD_DIR,
+  MAX_IMAGE_WIDTH,
   UploadStorageError,
   convertImageToWebp,
   ensureUploadDirectory,
