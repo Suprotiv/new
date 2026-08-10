@@ -61,7 +61,11 @@
     "home.accolades.4.award": "ITC Gold Flake, IFB Home Appliances and Mahadevi Birla World Academy",
     "home.accolades.4.project": "Kyoorius",
     "home.accolades.4.description": "Kyoorius is a design magazine that publishes an annual compilation of the best design work in India.",
-    "home.prefooter.copy": "Creativity isn’t clean. It’s messy,\nunpredictable and beautifully chaotic.\nThat’s where the magic happens— and\nwhere the best stories are born."
+    "home.prefooter.copy": "Creativity isn’t clean. It’s messy,\nunpredictable and beautifully chaotic.\nThat’s where the magic happens— and\nwhere the best stories are born.",
+    "jobs.hero.line1": "Are you the",
+    "jobs.hero.accent": "right fit?",
+    "jobs.hero.line2": "Here’s 7 reasons",
+    "jobs.hero.line3": "you could be..."
   },
   "images": {
     "home.news.heroImage": "/images/site-content/default/img-News-Siddha-Serena.jpeg",

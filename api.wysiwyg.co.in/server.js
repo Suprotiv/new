@@ -321,6 +321,10 @@ const defaultSiteContent = {
     "home.stats.4.label": "Leads generated",
     "home.stats.4.subLabel": "Helping clients grow their reach — one lead at a time.",
     "home.prefooter.copy": "Creativity isn’t clean. It’s messy,\nunpredictable and beautifully chaotic.\nThat’s where the magic happens— and\nwhere the best stories are born.",
+    "jobs.hero.line1": "Are you the",
+    "jobs.hero.accent": "right fit?",
+    "jobs.hero.line2": "Here’s 7 reasons",
+    "jobs.hero.line3": "you could be...",
   },
   images: {
     "home.news.heroImage": publicUploadPath("site-content/default/img-News-Siddha-Serena.jpeg"),
