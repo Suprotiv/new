@@ -26,7 +26,9 @@ const TEAM_PATH = path.join(__dirname, 'team.json');
 const CLIENTS_PATH = path.join(__dirname, 'clients.json');
 const TEAM_IMAGE_SIZE_LIMIT = 2 * 1024 * 1024;
 const HOME_PROJECT_IMAGE_SIZE_LIMIT = 5 * 1024 * 1024;
-const IS_PRODUCTION = String(process.env.environment || '').trim().toUpperCase() === 'PROD';
+const IS_PRODUCTION = String(
+  process.env.ENVIRONMENT || process.env.environment || ''
+).trim().toUpperCase() === 'PROD';
 
 app.use(cors());
 app.use(express.json());
