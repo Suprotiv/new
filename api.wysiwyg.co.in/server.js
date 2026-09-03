@@ -26,9 +26,29 @@ const TEAM_PATH = path.join(__dirname, 'team.json');
 const CLIENTS_PATH = path.join(__dirname, 'clients.json');
 const TEAM_IMAGE_SIZE_LIMIT = 2 * 1024 * 1024;
 const HOME_PROJECT_IMAGE_SIZE_LIMIT = 5 * 1024 * 1024;
-const IS_PRODUCTION = String(
-  process.env.ENVIRONMENT || process.env.environment || ''
-).trim().toUpperCase() === 'PROD';
+
+function normalizeOrigin(value) {
+  try {
+    return new URL(String(value || '').trim()).origin.toLowerCase();
+  } catch {
+    return '';
+  }
+}
+
+const PROD_ORIGINS = new Set(
+  String(process.env.PROD || '')
+    .split(',')
+    .map(normalizeOrigin)
+    .filter(Boolean)
+);
+
+function isProductionListingRequest(req) {
+  const origin = normalizeOrigin(req.get('origin'));
+  if (origin) return PROD_ORIGINS.has(origin);
+
+  const refererOrigin = normalizeOrigin(req.get('referer'));
+  return Boolean(refererOrigin && PROD_ORIGINS.has(refererOrigin));
+}
 
 app.use(cors());
 app.use(express.json());
@@ -513,13 +533,16 @@ app.post("/projects", verifyToken, upload, async (req, res) => {
 // GET - Fetch all projects
 app.get('/projects', async (req, res) => {
   try {
+    const prodOnly = isProductionListingRequest(req);
+    res.vary('Origin');
+
     const usesPagination =
       req.query.limit !== undefined ||
       req.query.offset !== undefined ||
       req.query.category !== undefined;
 
     if (!usesPagination) {
-      const projects = await dataStore.getProjects({ prodOnly: IS_PRODUCTION });
+      const projects = await dataStore.getProjects({ prodOnly });
       return res.json(projects);
     }
 
@@ -538,7 +561,7 @@ app.get('/projects', async (req, res) => {
       category: String(req.query.category || '').trim(),
       limit,
       offset,
-      prodOnly: IS_PRODUCTION,
+      prodOnly,
     });
 
     res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
