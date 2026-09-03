@@ -11,9 +11,13 @@ create table if not exists public.projects (
   tags text[] not null default '{}',
   main_image text default '',
   images jsonb not null default '{}'::jsonb,
+  prod_enabled boolean not null default false,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.projects
+  add column if not exists prod_enabled boolean not null default false;
 
 create table if not exists public.categories (
   slug text primary key,

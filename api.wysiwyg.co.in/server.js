@@ -26,6 +26,7 @@ const TEAM_PATH = path.join(__dirname, 'team.json');
 const CLIENTS_PATH = path.join(__dirname, 'clients.json');
 const TEAM_IMAGE_SIZE_LIMIT = 2 * 1024 * 1024;
 const HOME_PROJECT_IMAGE_SIZE_LIMIT = 5 * 1024 * 1024;
+const IS_PRODUCTION = String(process.env.environment || '').trim().toUpperCase() === 'PROD';
 
 app.use(cors());
 app.use(express.json());
@@ -516,7 +517,7 @@ app.get('/projects', async (req, res) => {
       req.query.category !== undefined;
 
     if (!usesPagination) {
-      const projects = await dataStore.getProjects();
+      const projects = await dataStore.getProjects({ prodOnly: IS_PRODUCTION });
       return res.json(projects);
     }
 
@@ -535,6 +536,7 @@ app.get('/projects', async (req, res) => {
       category: String(req.query.category || '').trim(),
       limit,
       offset,
+      prodOnly: IS_PRODUCTION,
     });
 
     res.set('Cache-Control', 'public, max-age=60, stale-while-revalidate=300');
@@ -542,6 +544,42 @@ app.get('/projects', async (req, res) => {
   } catch (parseError) {
     console.error('Error reading projects:', parseError);
     res.status(500).json({ error: 'Failed to read projects' });
+  }
+});
+
+// Admin listing management must always include dev and production projects.
+app.get('/admin/projects', verifyToken, async (req, res) => {
+  try {
+    return res.json(await dataStore.getProjects());
+  } catch (error) {
+    console.error('Error reading admin projects:', error);
+    return res.status(500).json({ error: 'Failed to read projects' });
+  }
+});
+
+app.put('/admin/projects/listings', verifyToken, async (req, res) => {
+  const listings = req.body?.listings;
+  if (!Array.isArray(listings) || listings.length === 0) {
+    return res.status(400).json({ error: 'At least one project listing is required' });
+  }
+
+  const normalized = listings.map(item => ({
+    project_id: String(item?.project_id || '').trim(),
+    prodEnabled: item?.prodEnabled,
+  }));
+  if (normalized.some(item => !item.project_id || typeof item.prodEnabled !== 'boolean')) {
+    return res.status(400).json({ error: 'Each listing requires a project_id and boolean prodEnabled value' });
+  }
+  if (new Set(normalized.map(item => item.project_id)).size !== normalized.length) {
+    return res.status(400).json({ error: 'Duplicate project IDs are not allowed' });
+  }
+
+  try {
+    const projects = await dataStore.updateProjectListings(normalized);
+    return res.json({ message: 'Project listings updated successfully', projects });
+  } catch (error) {
+    console.error('Error updating project listings:', error);
+    return res.status(500).json({ error: 'Failed to update project listings' });
   }
 });
 

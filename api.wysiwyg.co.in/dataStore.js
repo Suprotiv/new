@@ -13,6 +13,7 @@ function projectFromRow(row) {
     category: row.categories || [],
     tags: row.tags || [],
     mainImage: row.main_image || '',
+    prodEnabled: Boolean(row.prod_enabled),
     images: row.images || {
       slider1: [],
       slider2: [],
@@ -35,6 +36,7 @@ function projectToRow(project) {
     categories: Array.isArray(project.category) ? project.category : [],
     tags: Array.isArray(project.tags) ? project.tags : [],
     main_image: project.mainImage || '',
+    prod_enabled: Boolean(project.prodEnabled),
     images: project.images || {},
   };
 }
@@ -187,16 +189,20 @@ function throwIfError(error) {
   if (error) throw error;
 }
 
-async function getProjects() {
-  const { data, error } = await getSupabase()
+async function getProjects({ prodOnly = false } = {}) {
+  let query = getSupabase()
     .from('projects')
     .select('*')
     .order('title', { ascending: true });
+
+  if (prodOnly) query = query.eq('prod_enabled', true);
+
+  const { data, error } = await query;
   throwIfError(error);
   return (data || []).map(projectFromRow);
 }
 
-async function getProjectsPage({ category, limit, offset }) {
+async function getProjectsPage({ category, limit, offset, prodOnly = false }) {
   let query = getSupabase()
     .from('projects')
     .select('project_id,title,meta,categories,main_image')
@@ -206,6 +212,8 @@ async function getProjectsPage({ category, limit, offset }) {
   if (category && category.toLowerCase() !== 'all') {
     query = query.contains('categories', [category]);
   }
+
+  if (prodOnly) query = query.eq('prod_enabled', true);
 
   // Fetch one extra record so the client knows whether another page exists.
   const { data, error } = await query.range(offset, offset + limit);
@@ -339,6 +347,23 @@ async function updateProject(projectId, project) {
     .single();
   throwIfError(error);
   return projectFromRow(data);
+}
+
+async function updateProjectListings(listings) {
+  const enabledIds = listings.filter(item => item.prodEnabled).map(item => item.project_id);
+  const disabledIds = listings.filter(item => !item.prodEnabled).map(item => item.project_id);
+
+  const updates = [];
+  if (enabledIds.length) {
+    updates.push(getSupabase().from('projects').update({ prod_enabled: true }).in('project_id', enabledIds));
+  }
+  if (disabledIds.length) {
+    updates.push(getSupabase().from('projects').update({ prod_enabled: false }).in('project_id', disabledIds));
+  }
+
+  const results = await Promise.all(updates);
+  results.forEach(({ error }) => throwIfError(error));
+  return getProjects();
 }
 
 async function deleteProject(projectId) {
@@ -687,6 +712,7 @@ module.exports = {
   updateHomeHeroImage,
   updateHomeProject,
   updateProject,
+  updateProjectListings,
   updateSiteImage,
   updateSiteText,
   updateTeamMember,
